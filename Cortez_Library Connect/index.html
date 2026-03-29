@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivio | Modern Library System</title>
+    <style>
+        :root {
+            --paper: #f4f1ea;
+            --ink: #2c2926;
+            --card-yellow: #e8dcc4;
+            --stamp-red: #b22222;
+            --accent-blue: #4a6fa5;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--ink);
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(244, 241, 234, 0.88);
+            z-index: -1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 2px solid var(--ink);
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 900; font-size: 24px; letter-spacing: 2px; text-transform: uppercase; }
+
+        .nav-links button {
+            background: white;
+            border: 2px solid var(--ink);
+            padding: 8px 20px;
+            margin-left: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .nav-links button:hover { background: var(--ink); color: white; }
+
+        .auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .library-card {
+            background: var(--card-yellow);
+            width: 400px;
+            padding: 40px;
+            border: 1px solid #d1c4a8;
+            box-shadow: 10px 10px 0px var(--ink);
+        }
+
+        .library-card h2 {
+            border-bottom: 2px solid var(--ink);
+            margin: 0 0 25px 0;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .library-card input {
+            width: 100%;
+            background: none;
+            border: none;
+            border-bottom: 1px dashed var(--ink);
+            padding: 12px 0;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            outline: none;
+        }
+
+        .main-search-area {
+            text-align: center;
+            padding: 100px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 30px;
+            font-size: 28px;
+            border: 4px solid var(--ink);
+            box-shadow: 12px 12px 0px var(--ink);
+            outline: none;
+            background: white;
+            font-family: 'Courier New', monospace;
+        }
+
+        .results-area {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .book-card {
+            background: white;
+            border: 2px solid var(--ink);
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-align: left;
+            box-shadow: 4px 4px 0px var(--ink);
+        }
+
+        .book-card:hover { transform: translateY(-5px); box-shadow: 10px 10px 0px var(--ink); }
+
+        .overdue-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--stamp-red);
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transform: rotate(-4deg);
+            box-shadow: 6px 6px 0px var(--ink);
+            z-index: 100;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border: 4px solid var(--ink);
+            z-index: 3000;
+            width: 420px;
+            box-shadow: 20px 20px 0px rgba(0,0,0,0.4);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            font-weight: bold;
+            margin-top: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .close-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-overlay"></div>
+
+    <nav>
+        <div class="logo">Library Connect</div>
+        <div class="nav-links">
+            <button onclick="document.getElementById('mainSearch').focus()">Search</button>
+            <button onclick="alert('Syncing Member Database...')">Members</button>
+            <button onclick="alert('4 Items Currently Out')">Loan</button>
+        </div>
+    </nav>
+
+    <div class="auth-overlay" id="authOverlay">
+        <div class="library-card">
+            <h2>MEMBER IDENTIFICATION</h2>
+            <input type="text" placeholder="NAME:">
+            <input type="password" placeholder="MEMBER ID:">
+            <button class="action-btn" onclick="document.getElementById('authOverlay').style.display='none'">Sign Card</button>
+        </div>
+    </div>
+
+    <main class="main-search-area">
+        <input type="text" class="search-bar" id="mainSearch" placeholder="Search Title or Author..." onkeyup="searchBooks()">
+        <div class="results-area" id="resultsArea"></div>
+    </main>
+
+    <button class="overdue-btn" onclick="alert('NOTICE: 2 Books Overdue\nFines Accrued: $4.50')">OVERDUE</button>
+
+    <div class="modal" id="bookModal">
+        <h2 id="mTitle" style="margin:0 0 10px 0;"></h2>
+        <p id="mAuthor" style="font-family: 'Courier New'; margin-bottom: 20px;"></p>
+        <p id="mStatus" style="color: var(--accent-blue); font-weight: bold; padding-top:15px; border-top:1px solid #ddd;"></p>
+        <button class="action-btn" onclick="processLoan()">Place Hold / Loan</button>
+        <span class="close-link" onclick="document.getElementById('bookModal').style.display='none'">Return to Search</span>
+    </div>
+
+    <script>
+        let currentBg = 1;
+        function cycleBackground() {
+            document.body.style.backgroundImage = `url('Img${currentBg}.jpg')`;
+            currentBg = currentBg >= 10 ? 1 : currentBg + 1;
+        }
+        setInterval(cycleBackground, 6000);
+        cycleBackground();
+
+        const libraryData = [
+            { title: "Quantum Physics", author: "Richard Feynman", status: "Available" },
+            { title: "The Great Gatsby", author: "F. Scott Fitzgerald", status: "In Stack" },
+            { title: "Digital Architectures", author: "Alan Turing", status: "Loaned" },
+            { title: "Organic Chemistry", author: "Dr. L. Smith", status: "Available" },
+            { title: "World History", author: "Prof. H. Arnold", status: "Available" }
+        ];
+
+        function searchBooks() {
+            const input = document.getElementById('mainSearch').value.toLowerCase();
+            const container = document.getElementById('resultsArea');
+            container.innerHTML = "";
+            if(input.length < 1) return;
+
+            libraryData.forEach(book => {
+                if(book.title.toLowerCase().includes(input) || book.author.toLowerCase().includes(input)) {
+                    const card = document.createElement('div');
+                    card.className = 'book-card';
+                    card.innerHTML = `<strong>${book.title}</strong><br><small>${book.author}</small>`;
+                    card.onclick = () => openModal(book);
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function openModal(book) {
+            document.getElementById('mTitle').innerText = book.title;
+            document.getElementById('mAuthor').innerText = "By " + book.author;
+            document.getElementById('mStatus').innerText = "STATUS: " + book.status;
+            document.getElementById('bookModal').style.display = 'block';
+        }
+
+        function processLoan() {
+            const due = new Date();
+            due.setDate(due.getDate() + 14);
+            alert("HOLD CONFIRMED\nDue Date: " + due.toDateString());
+            document.getElementById('bookModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
