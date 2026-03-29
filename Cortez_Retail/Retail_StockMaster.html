@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>StockMaster - Industrial Smooth Scroll</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #FF8C00; 
+        font-family: 'Arial Black', Gadget, sans-serif;
+    }
+
+    /* BANNER AREA */
+.banner-container {
+    position: relative;
+    width: 100%;
+    height: 180px; /* Banner height */
+    border-bottom: 8px solid #000;
+    background-color: #000;
+}
+
+.banner-img {
+    width: 100%;
+    height: 180px;
+    display: block;
+    object-fit: cover;
+    opacity: 0.6;
+}
+
+/* Perfect Vertical Alignment for all 3 Header Elements */
+.login-link, .cart-status, .search-overlay {
+    position: absolute;
+    top: 50%; /* Moves top edge to middle of banner */
+    transform: translateY(-50%); /* Pulls element back up by half its own height */
+    z-index: 20;
+}
+
+/* Horizontal Positioning */
+.login-link { 
+    left: 20px; 
+    border: 4px solid #000;
+    background-color: #000;
+    color: #fff;
+    padding: 12px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.cart-status { 
+    right: 20px; 
+    background-color: #fff; 
+    color: #000; 
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0px #000;
+    padding: 12px 20px;
+    text-transform: uppercase;
+}
+
+.search-overlay {
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centered both ways */
+    width: 450px;
+    display: flex;
+    box-shadow: 10px 10px 0px #000;
+}
+
+.search-overlay input {
+    width: 100%;
+    padding: 15px;
+    border: 4px solid #000;
+    font-weight: bold;
+    outline: none;
+}
+
+    /* SECTION TITLES */
+    .section-title {
+        margin: 40px 0 10px 20px;
+        text-transform: uppercase;
+        background: #fff;
+        display: inline-block;
+        padding: 8px 20px;
+        border: 5px solid #000;
+        box-shadow: 6px 6px 0px #000;
+    }
+
+    /* THE SCROLLING ENGINE */
+    .scroll-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0 60px; 
+        margin-bottom: 40px;
+    }
+
+    .item-container {
+        display: flex;
+        overflow-x: auto;
+        /* Force cards to snap into place */
+        scroll-snap-type: x mandatory; 
+        /* Ensure JS scrollBy is smooth */
+        scroll-behavior: smooth; 
+        gap: 20px;
+        padding: 20px 10px;
+        scrollbar-width: none; 
+    }
+
+    .item-container::-webkit-scrollbar { display: none; }
+
+    /* INDUSTRIAL ITEM CARDS */
+    .item-card {
+        flex: 0 0 200px; 
+        background: white;
+        padding: 15px;
+        border: 4px solid #000;
+        box-shadow: 8px 8px 0px #000;
+        /* Mark card as a snap point */
+        scroll-snap-align: start; 
+        transition: 0.2s;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .item-card:hover {
+        transform: translate(-4px, -4px);
+        box-shadow: 12px 12px 0px #000;
+    }
+
+    .item-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border: 4px solid #000;
+    }
+
+    /* NAV BUTTONS */
+    .nav-btn {
+        position: absolute;
+        background: #000;
+        color: #FF8C00;
+        border: 4px solid #000;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        z-index: 100;
+        font-size: 24px;
+        font-weight: 900;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nav-btn:hover { background: #fff; color: #000; }
+    .left-btn { left: 5px; }
+    .right-btn { right: 5px; }
+
+    /* MODAL POP-UP */
+    .modal {
+        display: none; 
+        position: fixed;
+        z-index: 2000;
+        left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        justify-content: center; align-items: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 40px;
+        border: 10px solid #000;
+        width: 340px;
+        text-align: center;
+        position: relative;
+    }
+
+    .price-tag {
+        font-size: 36px;
+        background: #000;
+        color: #FF8C00;
+        padding: 10px;
+        margin: 20px 0;
+    }
+
+    .buy-btn {
+        background-color: #1DB954;
+        color: #000;
+        border: 5px solid #000;
+        padding: 15px;
+        width: 100%;
+        font-weight: 900;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div class="banner-container">
+    <a href="Retail_LogIn.html" class="login-link">Logout</a>
+    <div class="cart-status">Orders: <span id="cartCount">0</span></div>
+    <img src="EcommerceIMG.jpg" class="banner-img">
+    <div class="search-overlay">
+        <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="SCANNING DATABASE...">
+    </div>
+</div>
+
+<h2 class="section-title">Anime Merchandise</h2>
+<div class="scroll-wrapper">
+    <button class="nav-btn left-btn" onclick="smoothScroll('animeGrid', -660)">&#10094;</button>
+    <div class="item-container" id="animeGrid">
+        <div class="item-card" data-name="Bakugo" data-price="₱550" onclick="openModal(this)"><img src="AnimerMerch.jpg"><p>MHA Bakugo T-Shirt</p></div>
+        <div class="item-card" data-name="Itadori" data-price="₱850" onclick="openModal(this)"><img src="AnimerMerch2.jpg"><p>Yuji Itadori Funko Pop</p></div>
+        <div class="item-card" data-name="Sakamoto" data-price="₱600" onclick="openModal(this)"><img src="AnimerMerch3.jpg"><p>Sakamoto Days Shirt</p></div>
+        <div class="item-card" data-name="Toji" data-price="₱600" onclick="openModal(this)"><img src="AnimerMerch4.jpg"><p>Toji Fushiguro Shirt</p></div>
+        <div class="item-card" data-name="Nino" data-price="₱350" onclick="openModal(this)"><img src="AnimerMerch5.jpg"><p>Nino Nakano Poster</p></div>
+        <div class="item-card" data-name="Giorno" data-price="₱650" onclick="openModal(this)"><img src="AnimerMerch6.jpg"><p>Giorno Giovanna T-Shirt</p></div>
+        <div class="item-card" data-name="Bleach" data-price="₱1,200" onclick="openModal(this)"><img src="AnimerMerch7.jpg"><p>Bleach TYBW Hoodie</p></div>
+        <div class="item-card" data-name="Aizen" data-price="₱15,000" onclick="openModal(this)"><img src="AnimerMerch8.jpg"><p>Aizen TYBW Resin Figure</p></div>
+        <div class="item-card" data-name="Kaneki" data-price="₱1,100" onclick="openModal(this)"><img src="AnimerMerch9.jpg"><p>TG Ken Kaneki Hoodie</p></div>
+        <div class="item-card" data-name="Jingyuan" data-price="₱2,500" onclick="openModal(this)"><img src="AnimerMerch10.jpg"><p>HSR Jingyuan Figure</p></div>
+        <div class="item-card" data-name="Blade" data-price="₱12,000" onclick="openModal(this)"><img src="AnimerMerch11.jpg"><p>HSR Blade Resin Figure</p></div>
+        <div class="item-card" data-name="Kafka Blade" data-price="₱1,500" onclick="openModal(this)"><img src="AnimerMerch12.jpg"><p>Kafka & Blade Chibi Figurines</p></div>
+        <div class="item-card" data-name="Kafka" data-price="₱13,500" onclick="openModal(this)"><img src="AnimerMerch13.jpg"><p>HSR Kafka Resin Figure</p></div>
+    </div>
+    <button class="nav-btn right-btn" onclick="smoothScroll('animeGrid', 660)">&#10095;</button>
+</div>
+
+<h2 class="section-title">Baby Sets</h2>
+<div class="scroll-wrapper">
+    <button class="nav-btn left-btn" onclick="smoothScroll('babyGrid', -660)">&#10094;</button>
+    <div class="item-container" id="babyGrid">
+        <div class="item-card" data-name="Baby 1" data-price="₱450" onclick="openModal(this)"><img src="BabyClothesSet.jpg"><p>Sleep Set 1</p></div>
+        <div class="item-card" data-name="Baby 2" data-price="₱450" onclick="openModal(this)"><img src="BabyClothesSet2.jpg"><p>Sleep Set 2</p></div>
+        <div class="item-card" data-name="Baby 3" data-price="₱550" onclick="openModal(this)"><img src="BabyClothesSet3.jpg"><p>Casual Set</p></div>
+        <div class="item-card" data-name="Baby 4" data-price="₱350" onclick="openModal(this)"><img src="BabyClothesSet4.jpg"><p>Summer Set</p></div>
+        <div class="item-card" data-name="Baby 5" data-price="₱400" onclick="openModal(this)"><img src="BabyClothesSet5.jpg"><p>Home Set</p></div>
+        <div class="item-card" data-name="Baby 6" data-price="₱400" onclick="openModal(this)"><img src="BabyClothesSet6.jpg"><p>Home Set 2</p></div>
+        <div class="item-card" data-name="Baby 7" data-price="₱650" onclick="openModal(this)"><img src="BabyClothesSet7.jpg"><p>Fashion Set</p></div>
+        <div class="item-card" data-name="Baby 8" data-price="₱500" onclick="openModal(this)"><img src="BabyClothesSet8.jpg"><p>Sleep Set 3</p></div>
+        <div class="item-card" data-name="Baby 9" data-price="₱700" onclick="openModal(this)"><img src="BabyClothesSet9.jpg"><p>Fashion Set 2</p></div>
+    </div>
+    <button class="nav-btn right-btn" onclick="smoothScroll('babyGrid', 660)">&#10095;</button>
+</div>
+
+<h2 class="section-title">Gaming Consoles & Mobile Devices</h2>
+<div class="scroll-wrapper">
+    <button class="nav-btn left-btn" onclick="smoothScroll('gameGrid', -660)">&#10094;</button>
+    <div class="item-container" id="gameGrid">
+        <div class="item-card" data-name="PS5" data-price="₱27,000" onclick="openModal(this)"><img src="GamingConsole.jpg"><p>PlayStation 5</p></div>
+        <div class="item-card" data-name="PS4" data-price="₱12,000" onclick="openModal(this)"><img src="GamingConsole2.jpg"><p>PlayStation 4</p></div>
+        <div class="item-card" data-name="Switch" data-price="₱14,500" onclick="openModal(this)"><img src="GamingConsole3.jpg"><p>Nintendo Switch</p></div>
+        <div class="item-card" data-name="Steam Deck" data-price="₱22,000" onclick="openModal(this)"><img src="GamingConsole4.jpg"><p>Steam Deck</p></div>
+        <div class="item-card" data-name="Monitor" data-price="₱8,500" onclick="openModal(this)"><img src="GamingConsole5.jpg"><p>Gaming Monitor</p></div>
+        <div class="item-card" data-name="Ipad" data-price="₱18,000" onclick="openModal(this)"><img src="GamingConsole6.jpg"><p>iPad</p></div>
+        <div class="item-card" data-name="Iphone" data-price="₱45,000" onclick="openModal(this)"><img src="GamingConsole7.jpg"><p>iPhone</p></div>
+        <div class="item-card" data-name="Vivo" data-price="₱9,000" onclick="openModal(this)"><img src="GamingConsole8.jpg"><p>Vivo Phone</p></div>
+        <div class="item-card" data-name="Lenovo" data-price="₱11,000" onclick="openModal(this)"><img src="GamingConsole9.jpg"><p>Lenovo Tablet</p></div>
+    </div>
+    <button class="nav-btn right-btn" onclick="smoothScroll('gameGrid', 660)">&#10095;</button>
+</div>
+
+<div id="itemModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" style="position:absolute; top:5px; right:15px; font-size:40px; cursor:pointer;">&times;</span>
+        <h3 id="modalName" style="margin-top:0; text-transform:uppercase;">ITEM</h3>
+        <img id="modalImg" src="" style="width:250px; height:250px; border:5px solid #000;">
+        <div class="price-tag" id="modalPrice">₱0</div>
+        <button class="buy-btn" onclick="addToCart()">Update Inventory</button>
+    </div>
+</div>
+
+<script>
+    let cartCount = 0;
+
+    // SMOOTH SCROLL FUNCTION
+    function smoothScroll(id, amount) {
+        const container = document.getElementById(id);
+        container.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    function searchItems() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('item-card');
+        for (let i = 0; i < cards.length; i++) {
+            let name = cards[i].getAttribute('data-name').toLowerCase();
+            cards[i].style.display = name.includes(input) ? "block" : "none";
+        }
+    }
+
+    function openModal(card) {
+        document.getElementById('modalName').innerText = card.querySelector('p').innerText;
+        document.getElementById('modalImg').src = card.querySelector('img').src;
+        document.getElementById('modalPrice').innerText = card.getAttribute('data-price');
+        document.getElementById('itemModal').style.display = "flex";
+    }
+
+    function closeModal() { document.getElementById('itemModal').style.display = "none"; }
+
+    function addToCart() {
+        cartCount++;
+        document.getElementById('cartCount').innerText = cartCount;
+        alert("Logistics System: Item Successfully Synced.");
+        closeModal();
+    }
+
+    window.onclick = (e) => { if(e.target == document.getElementById('itemModal')) closeModal(); }
+</script>
+
+</body>
+</html>
