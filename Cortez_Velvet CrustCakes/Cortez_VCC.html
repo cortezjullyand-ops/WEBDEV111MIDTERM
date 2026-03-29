@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Crust Cakes | Artisan Bakery</title>
+    <style>
+        :root {
+            --cream: #FFFDD0;
+            --velvet-maroon: #7D0541;
+            --glass: rgba(255, 255, 255, 0.2);
+            --text-dark: #2c2c2c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('Cake_Img1.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-size: 24px; font-weight: bold; color: var(--cream); letter-spacing: 2px; cursor: pointer; }
+
+        .nav-links button {
+            background: var(--cream);
+            color: var(--velvet-maroon);
+            border: none;
+            padding: 10px 25px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links button:hover { background: white; transform: scale(1.05); }
+
+        .gallery-container {
+            padding: 50px;
+            column-count: 3;
+            column-gap: 25px;
+        }
+
+        .cake-card {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            break-inside: avoid;
+            transition: 0.4s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .cake-card:hover { transform: translateY(-10px) scale(1.02); }
+        .cake-card img { width: 100%; display: block; }
+        .cake-info { padding: 20px; text-align: center; background: white; }
+        .cake-info h3 { margin: 0; font-size: 1.2rem; color: var(--velvet-maroon); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            backdrop-filter: blur(8px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            font-size: 24px; cursor: pointer; color: var(--velvet-maroon);
+        }
+
+        .step-content { text-align: center; }
+        
+        select, input {
+            width: 100%; padding: 12px; margin: 15px 0;
+            border-radius: 10px; border: 1px solid #ccc;
+            font-family: inherit;
+        }
+
+        .action-btn {
+            background: var(--velvet-maroon);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .info-bar { position: fixed; bottom: 20px; right: 20px; }
+        
+        .schedule-btn {
+            background: var(--velvet-maroon); color: white;
+            padding: 15px 30px; border-radius: 50px;
+            border: 2px solid var(--cream); cursor: pointer;
+        }
+
+        .auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .login-card h2 { color: var(--cream); margin-bottom: 20px; }
+        
+        .login-card input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border-radius: 10px; border: none; background: rgba(255,255,255,0.8);
+        }
+
+        @media (max-width: 800px) { .gallery-container { column-count: 1; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="location.reload()">VELVET CRUST</div>
+        <div class="nav-links">
+            <button onclick="handleNav('Orders')">Orders</button>
+            <button onclick="handleNav('Design')">Design</button>
+            <button onclick="handleNav('Pickup')">Pickup</button>
+        </div>
+    </nav>
+
+    <div class="auth-overlay" id="authCard">
+        <div class="login-card">
+            <h2>Welcome, Dear Customer</h2>
+            <input type="text" placeholder="Username">
+            <input type="password" placeholder="Password">
+            <button class="action-btn" style="background: var(--cream); color: var(--velvet-maroon);" onclick="document.getElementById('authCard').style.display='none'">Login / Register</button>
+        </div>
+    </div>
+
+    <div class="gallery-container">
+        <div class="cake-card" onclick="selectCake('Choco Fudge')"><img src="Cake_Img1.jpg"><div class="cake-info"><h3>Choco Fudge</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Cookie and KitKat Delight')"><img src="Cake_Img2.jpg"><div class="cake-info"><h3>Cookie and KitKat Delight</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Strawberry Blast')"><img src="Cake_Img3.jpg"><div class="cake-info"><h3>Strawberry Blast</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Caramel Grande')"><img src="Cake_Img4.jpg"><div class="cake-info"><h3>Caramel Grande</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Black Forest')"><img src="Cake_Img5.jpg"><div class="cake-info"><h3>Black Forest</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Birthday Surprise')"><img src="Cake_Img6.jpg"><div class="cake-info"><h3>Birthday Surprise</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Coco & Caramel Drip')"><img src="Cake_Img7.jpg"><div class="cake-info"><h3>Coco & Caramel Drip</h3></div></div>
+        <div class="cake-card" onclick="selectCake('FunFetti')"><img src="Cake_Img8.jpg"><div class="cake-info"><h3>FunFetti</h3></div></div>
+        <div class="cake-card" onclick="selectCake('4in1 Luxury Cake')"><img src="Cake_Img9.jpg"><div class="cake-info"><h3>4in1 Luxury Cake</h3></div></div>
+        <div class="cake-card" onclick="selectCake('Cocoa Marble')"><img src="Cake_Img10.jpg"><div class="cake-info"><h3>Cocoa Marble</h3></div></div>
+    </div>
+
+    <div class="modal-overlay" id="orderModal">
+        <div class="glass-card">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody" class="step-content"></div>
+        </div>
+    </div>
+
+    <div class="info-bar">
+        <button class="schedule-btn" onclick="alert('Mon-Sat: 8AM - 8PM\nSun: 10AM - 4PM')">Schedule Info</button>
+    </div>
+
+    <script>
+        let orderData = { cake: "", flavor: "", date: "" };
+
+        function handleNav(type) {
+            alert(type + " system initialized. Redirecting...");
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        function selectCake(name) {
+            orderData.cake = name;
+            const modal = document.getElementById('orderModal');
+            const body = document.getElementById('modalBody');
+            modal.style.display = 'flex';
+            body.innerHTML = `
+                <h2>Customize: ${name}</h2>
+                <label>Choose Filling</label>
+                <select id="fChoice">
+                    <option>Belgium Chocolate</option>
+                    <option>Cream Cheese</option>
+                    <option>Strawberry Jam</option>
+                    <option>Whipped Ganache</option>
+                </select>
+                <button class="action-btn" onclick="stepDate()">Next: Pick Date</button>
+            `;
+        }
+
+        function stepDate() {
+            orderData.flavor = document.getElementById('fChoice').value;
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `
+                <h2>Select Pickup Date</h2>
+                <input type="date" id="pDate" min="${new Date().toISOString().split('T')[0]}">
+                <button class="action-btn" onclick="stepConfirm()">Next: Confirm</button>
+            `;
+        }
+
+        function stepConfirm() {
+            orderData.date = document.getElementById('pDate').value;
+            if(!orderData.date) return alert("Please select a date.");
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `
+                <h2 style="color: var(--velvet-maroon)">Confirm Order</h2>
+                <p><strong>Cake:</strong> ${orderData.cake}</p>
+                <p><strong>Flavor:</strong> ${orderData.flavor}</p>
+                <p><strong>Date:</strong> ${orderData.date}</p>
+                <button class="action-btn" onclick="complete()">Confirm Pickup</button>
+            `;
+        }
+
+        function complete() {
+            alert("Order placed successfully for " + orderData.cake + "!");
+            closeModal();
+        }
+    </script>
+
+</body>
+</html>
