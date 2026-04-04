@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Ni JulliLand - Home</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: linear-gradient(rgba(2, 5, 48, 0.8), rgba(2, 5, 48, 0.8)), url('MusicImg2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif; 
+        }
+        
+        .sidebar {
+            height: 100%;
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #000000;
+            padding-top: 20px;
+            color: white;
+            border-right: 1px solid #1DB954;
+            z-index: 100;
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #b3b3b3;
+            display: block;
+        }
+
+        .sidebar a:hover { color: #1DB954; }
+
+        .artist-container { padding: 20px; color: #b3b3b3; }
+        
+        .artist-link {
+            display: block;
+            padding: 5px 0;
+            color: #1DB954;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .main-content { 
+            margin-left: 220px; 
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .song-grid {
+            display: flex; 
+            gap: 30px; 
+            flex-wrap: wrap; 
+            margin-top: 40px; 
+            margin-bottom: 150px; 
+            justify-content: center; 
+            /* Fixed width to force 3 items per row */
+            max-width: 600px; 
+        }
+
+        .poster-card { 
+            text-align: center; 
+            color: white; 
+            width: 160px; 
+            cursor: pointer; 
+            transition: transform 0.2s;
+        }
+        .poster-card:hover { transform: scale(1.05); }
+        
+        .poster-card img { border-radius: 10px; border: 2px solid white; }
+
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2 style="text-align: center; color: #1DB954;">JulliLand</h2>
+    <a href="Music_Website.html">Login</a>
+    <a href="Music_WebHome.html">Home</a>
+    <a href="Music_Playlist.html">Playlist</a>
+    
+    <div class="artist-container">
+        <p style="color: white; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #333;">ARTISTS</p>
+        <a href="https://www.youtube.com/@KidInkVEVO" target="_blank" class="artist-link">Kid Ink</a>
+        <a href="https://www.youtube.com/@SeanKingston" target="_blank" class="artist-link">Sean Kingston</a>
+        <a href="https://www.youtube.com/@SummerWalker" target="_blank" class="artist-link">Summer Walker</a>
+        <a href="https://www.youtube.com/@TaylorSwift" target="_blank" class="artist-link">Taylor Swift</a>
+    </div>
+</div>
+
+<div class="main-content">
+    
+    <table border="0" style="margin-bottom: 20px;">
+      <tr>
+        <td><img src="Music_Logo.jpeg" border="2" width="160" height="150"></td>
+        <td><img src="Music_Banner.jpeg" border="2" width="800" height="150"></td>
+      </tr>
+    </table>
+
+    <div class="song-grid">
+        
+        <div class="poster-card" onclick="playSong('Chris_Brown_-_Main_Chick_(mp3.pm).mp3', 'Kid Ink - Main Chick')">
+            <img src="Kid_Ink_Poster.jpg" width="160" height="160">
+            <p><b>Main Chick</b><br><small>Kid Ink</small></p>
+        </div>
+
+        <div class="poster-card" onclick="playSong('Sean_Kingston_-_Beat_It_Ft._Chris_Brown_Wiz_Khalifa_(mp3.pm).mp3', 'Sean Kingston - Beat It')">
+            <img src="Sean_Kingston_Poster.jpg" width="160" height="160">
+            <p><b>Beat It</b><br><small>Sean Kingston</small></p>
+        </div>
+        
+        <div class="poster-card" onclick="playSong('Summer_Walker_-_Tonight_(mp3.pm).mp3', 'Summer Walker - Tonight')">
+            <img src="Summer_Walker_Poster.jpg" width="160" height="160">
+            <p><b>Tonight</b><br><small>Summer Walker</small></p>
+        </div>
+
+        <div class="poster-card" onclick="playSong('Taylor_Swift_-_Guilty_as_Sin_(mp3.pm).mp3', 'Taylor Swift - Guilty as Sin')">
+            <img src="Guilty_as_Sin_Poster.jpg" width="160" height="160">
+            <p><b>Guilty as Sin</b><br><small>Taylor Swift</small></p>
+        </div>
+
+        <div class="poster-card" onclick="playSong('Taylor_Swift_-_So_High_School_(mp3.pm).mp3', 'Taylor Swift - So High School')">
+            <img src="So_Highschool_Poster.jpg" width="160" height="160">
+            <p><b>So High School</b><br><small>Taylor Swift</small></p>
+        </div>
+
+        <div class="poster-card" onclick="playSong('Tay_Swift_-_Red_(mp3.pm).mp3', 'Taylor Swift - Red')">
+            <img src="Red_Poster.png" width="160" height="160">
+            <p><b>Red</b><br><small>Taylor Swift</small></p>
+        </div>
+
+    </div>
+</div>
+
+<div style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #181818; border-top: 3px solid #1DB954; padding: 20px; display: flex; align-items: center; justify-content: space-around; z-index: 1000;">
+    <div style="color: white;">
+        <b style="color: #1DB954;">Now Playing:</b> 
+        <span id="current-song-title">Select a Song</span>
+    </div>
+
+    <audio id="main-player" controls style="width: 40%; filter: invert(100%);">
+        <source id="player-source" src="" type="audio/mpeg">
+    </audio>
+    
+    <div style="color: #b3b3b3; font-size: 12px;">JulliLand &copy; 2026</div>
+</div>
+
+<script>
+    function playSong(fileName, songTitle) {
+        var player = document.getElementById('main-player');
+        var source = document.getElementById('player-source');
+        var titleDisplay = document.getElementById('current-song-title');
+
+        source.src = fileName;
+        titleDisplay.innerText = songTitle;
+        player.load();
+        player.play();
+    }
+</script>
+
+</body>
+</html>
