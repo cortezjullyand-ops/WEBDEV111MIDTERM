@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Ni JulliLand - Playlist</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: linear-gradient(rgba(2, 5, 48, 0.8), rgba(2, 5, 48, 0.8)), url('MusicImg3.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif; 
+        }
+        
+        .sidebar {
+            height: 100%;
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #000000;
+            padding-top: 20px;
+            color: white;
+            border-right: 1px solid #1DB954;
+            z-index: 100;
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #b3b3b3;
+            display: block;
+        }
+
+        .sidebar a:hover { color: #54aef7; }
+
+        .artist-container { padding: 20px; color: #b3b3b3; }
+        
+        .artist-link {
+            display: block;
+            padding: 5px 0;
+            color: #54aef7;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .main-content { 
+            margin-left: 220px; 
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .song-grid {
+            display: flex; 
+            gap: 30px; 
+            flex-wrap: wrap; 
+            margin-top: 40px; 
+            margin-bottom: 150px; 
+            justify-content: center; 
+            max-width: 1000px; 
+        }
+
+        .poster-card { 
+            text-align: center; 
+            color: white; 
+            width: 160px; 
+            cursor: pointer; 
+            transition: transform 0.2s;
+        }
+        .poster-card:hover { transform: scale(1.05); }
+        .poster-card img { border-radius: 10px; border: 2px solid white; }
+        .poster-card a { color: white; text-decoration: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2 style="text-align: center; color: #54aef7;">JulliLand</h2>
+    <a href="Music_Website.html">Log-Out</a>
+    <a href="Music_WebHome.html">Home</a>
+    <a href="Music_Playlist.html">Playlist</a>
+    
+    <div class="artist-container">
+        <p style="color: white; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #333;">ARTISTS</p>
+        <a href="https://www.youtube.com/@KidInkVEVO" target="_blank" class="artist-link">Kid Ink</a>
+        <a href="https://www.youtube.com/@SeanKingston" target="_blank" class="artist-link">Sean Kingston</a>
+        <a href="https://www.youtube.com/@SummerWalker" target="_blank" class="artist-link">Summer Walker</a>
+    </div>
+</div>
+
+<div class="main-content">
+    
+    <table border="0" style="margin-bottom: 20px;">
+      <tr>
+        <td><img src="Music_Logo.jpeg" border="2" width="160" height="150"></td>
+        <td><img src="New_MusicBanner.png" border="2" width="800" height="150"></td>
+      </tr>
+    </table>
+
+    <div class="song-grid">
+        
+        <div class="poster-card">
+            <a href="Music_WebHome.html">
+                <img src="MusicImg1.jpg" width="160" height="160">
+                <p><b>Your Playlist :)</b></p>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
