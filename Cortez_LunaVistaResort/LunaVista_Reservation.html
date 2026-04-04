@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Luna Vista Resort | Reservations</title>
+    <style>
+        /* CSS Reset & Variable Setup */
+        * { box-sizing: border-box; }
+        :root {
+            --ocean-blue: #1e3c72;
+            --accent-blue: #00d2ff;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--ocean-blue) 0%, #2a5298 100%);
+            background-attachment: fixed;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive Layout Grid */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Modern Glass Panel */
+        .panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* Slideshow Section */
+        .slideshow-section {
+            flex: 1.5;
+            min-width: 350px;
+            position: relative;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Booking Form Section */
+        .booking-section {
+            flex: 1;
+            min-width: 320px;
+            padding: 40px;
+        }
+
+        .booking-section h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #add8e6;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group { flex: 1; }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to right, #3a7bd5, var(--accent-blue));
+            color: white;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.5);
+        }
+
+        /* Slideshow Navigation */
+        .dot-container {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .dot {
+            height: 10px; width: 10px; margin: 0 5px;
+            background-color: rgba(255,255,255,0.4);
+            border-radius: 50%; display: inline-block;
+            transition: 0.4s;
+        }
+
+        .active { background-color: #fff; width: 30px; border-radius: 5px; }
+
+        /* Animations */
+        .fade { animation: fadeEffect 1.5s; }
+        @keyframes fadeEffect {
+            from { opacity: 0.6; } to { opacity: 1; }
+        }
+
+        @media (max-width: 800px) {
+            .container { flex-direction: column; }
+            .slideshow-section { min-width: 100%; }
+            .mySlides img { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Luna Vista Resort</h1>
+</header>
+
+<main class="container">
+    <section class="slideshow-section panel">
+        <div class="mySlides fade">
+            <img src="Resort_Slides.jpg" alt="Ocean View Suite">
+        </div>
+        <div class="mySlides fade">
+            <img src="Resort_Slides2.jpg" alt="Poolside Lounge">
+        </div>
+        <div class="mySlides fade">
+            <img src="Resort_Slides3.jpg" alt="Fine Dining">
+        </div>
+        <div class="mySlides fade">
+            <img src="Resort_Slides4.jpg" alt="Resort Exterior">
+        </div>
+        
+        <div class="dot-container">
+            <span class="dot"></span> 
+            <span class="dot"></span> 
+            <span class="dot"></span> 
+            <span class="dot"></span> 
+        </div>
+    </section>
+
+    <section class="booking-section panel">
+        <h2>Booking/Reservation</h2>
+        <form action="Reservation_Confirmation.html">
+            <div class="form-group">
+                <label>Check-In Date</label>
+                <input type="date" required id="checkin">
+            </div>
+
+            <div class="form-group">
+                <label>Check-Out Date</label>
+                <input type="date" required id="checkout">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Guests</label>
+                    <select>
+                        <option>1 Adult</option>
+                        <option selected>2 Adults</option>
+                        <option>3 Adults</option>
+                        <option>4+ Adults</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Room Type</label>
+                    <select>
+                        <option>Deluxe Ocean</option>
+                        <option>Vista Suite</option>
+                        <option>Family Villa</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Special Requests</label>
+                <input type="text" placeholder="Extra towels, early check-in, etc.">
+            </div>
+
+            <button type="submit">Check Availability</button>
+        </form>
+    </section>
+</main>
+
+<script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        let slides = document.getElementsByClassName("mySlides");
+        let dots = document.getElementsByClassName("dot");
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}    
+        for (let i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex-1].style.display = "block";  
+        dots[slideIndex-1].className += " active";
+        setTimeout(showSlides, 3500); 
+    }
+
+    // Set default dates to today and tomorrow
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkin').value = today;
+</script>
+
+</body>
+</html>
