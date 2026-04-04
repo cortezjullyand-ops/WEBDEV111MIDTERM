@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixIt Desk | Systems & Support</title>
+    <style>
+        :root {
+            --terminal-green: #00FF41;
+            --terminal-bg: #0D0D0D;
+            --folder-beige: #E6D5B8;
+            --folder-tab: #CBB99C;
+            --ink-blue: #0A1931;
+        }
+
+        * {
+            font-family: 'Courier New', Courier, monospace !important;
+        }
+
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            color: var(--terminal-green);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #000;
+            border-bottom: 2px solid var(--terminal-green);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-weight: bold; font-size: 22px; letter-spacing: 1px; cursor: pointer; }
+
+        .nav-links button {
+            background: none;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .nav-links button:hover {
+            background: var(--terminal-green);
+            color: black;
+        }
+
+        .auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--terminal-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .terminal-box {
+            width: 500px;
+            padding: 20px;
+            border: 1px solid #333;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--terminal-green);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--terminal-green);
+            font-size: 18px;
+            outline: none;
+            width: 70%;
+        }
+
+        .catalog-container {
+            padding: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .course-folder {
+            background: var(--folder-beige);
+            height: 220px;
+            position: relative;
+            border-radius: 0 10px 10px 10px;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--ink-blue);
+            padding: 25px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .course-folder::before {
+            content: '';
+            position: absolute;
+            top: -18px;
+            left: 0;
+            width: 90px;
+            height: 18px;
+            background: var(--folder-tab);
+            border-radius: 5px 5px 0 0;
+        }
+
+        .course-folder:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 12px 12px 0px rgba(0,0,0,0.4);
+        }
+
+        .folder-title { 
+            font-weight: bold; 
+            font-size: 1.1rem; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid var(--ink-blue);
+            display: inline-block;
+        }
+
+        .progress-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #000;
+            border: 2px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 15px 30px;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--terminal-green);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .progress-btn:hover {
+            background: var(--terminal-green);
+            color: black;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-card {
+            background: var(--folder-beige);
+            color: var(--ink-blue);
+            padding: 40px;
+            width: 450px;
+            border: 4px solid var(--ink-blue);
+            box-shadow: 15px 15px 0px var(--terminal-green);
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 15px;
+            background: var(--ink-blue);
+            color: white;
+            border: none;
+            margin-top: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-overlay"></div>
+
+    <nav>
+        <div class="logo" onclick="location.reload()">FIXIT_DESK_v2.0.4</div>
+        <div class="nav-links">
+            <button onclick="alert('AUTH: Ticket sequence started...')">Tickets</button>
+            <button onclick="alert('STATION: Connecting to Support...')">Support</button>
+            <button onclick="alert('LOGS: Loading historical data...')">History</button>
+        </div>
+    </nav>
+
+    <div class="auth-overlay" id="authOverlay">
+        <div class="terminal-box">
+            <p>> INITIALIZING SECURE LOGIN...</p>
+            <p>> USERNAME: <input type="text" class="terminal-input" id="loginUser" autofocus></p>
+            <p>> PASSWORD: <input type="password" class="terminal-input" id="loginPass"></p>
+            <p>> STATUS: <span id="status">AWAITING_AUTH</span><span class="cursor"></span></p>
+            <button class="btn-action" style="background:var(--terminal-green); color:black;" onclick="bypassLogin()">[ EXECUTE_LOGIN ]</button>
+        </div>
+    </div>
+
+    <main class="catalog-container">
+        <div class="course-folder" onclick="selectCourse('CYBER_SEC_PACK')">
+            <div class="folder-title">NETWORK_DEFENSE_v1</div>
+            <p>Module: Encryption</p>
+            <p><small>REF: 00FF-A1</small></p>
+        </div>
+        <div class="course-folder" onclick="selectCourse('CLOUD_INFRA')">
+            <div class="folder-title">CLOUD_OPS_CORE</div>
+            <p>Module: Virtualization</p>
+            <p><small>REF: 00FF-A2</small></p>
+        </div>
+        <div class="course-folder" onclick="selectCourse('DEVOPS_TOOLKIT')">
+            <div class="folder-title">DEVOPS_PIPELINE</div>
+            <p>Module: Automation</p>
+            <p><small>REF: 00FF-A3</small></p>
+        </div>
+    </main>
+
+    <button class="progress-btn" onclick="alert('>> PROGRESS_REPORT\n>> COMPLETION: 72%\n>> STATUS: ACTIVE')">View Progress</button>
+
+    <div class="modal" id="flowModal">
+        <div class="modal-card" id="modalTarget"></div>
+    </div>
+
+    <script>
+        let session = { course: "", fee: 299.99 };
+
+        function bypassLogin() {
+            document.getElementById('status').innerText = "VERIFIED";
+            setTimeout(() => {
+                document.getElementById('authOverlay').style.display = 'none';
+            }, 600);
+        }
+
+        function selectCourse(name) {
+            session.course = name;
+            const modal = document.getElementById('flowModal');
+            const target = document.getElementById('modalTarget');
+            modal.style.display = 'flex';
+            target.innerHTML = `
+                <h2 style="margin-top:0;">ADD TO SEMESTER?</h2>
+                <p>FILE_NAME: <strong>${name}</strong></p>
+                <p>CREDITS: 3.0_UNIT</p>
+                <button class="btn-action" onclick="payFees()">COMMIT TO SEMESTER</button>
+                <p onclick="closeModal()" style="text-align:center; cursor:pointer; color:red; margin-top:20px;">[ ABORT ]</p>
+            `;
+        }
+
+        function payFees() {
+            const target = document.getElementById('modalTarget');
+            target.innerHTML = `
+                <h2 style="margin-top:0;">FEE_SETTLEMENT</h2>
+                <p>TRANSACTION: ${session.course}</p>
+                <p>TOTAL_DUE: $${session.fee}</p>
+                <button class="btn-action" onclick="viewTranscript()">AUTHORIZE_PAYMENT</button>
+            `;
+        }
+
+        function viewTranscript() {
+            const target = document.getElementById('modalTarget');
+            target.innerHTML = `
+                <h2 style="margin-top:0;">TRANSCRIPT_v2</h2>
+                <p>IDENT: User_ID_882</p>
+                <p style="border-bottom:2px solid #000">LOADED_MODULES:</p>
+                <p>> ${session.course} [OK]</p>
+                <p>> LINUX_KERNEL_EXP [A]</p>
+                <button class="btn-action" onclick="closeModal()">EXIT_TO_DESK</button>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('flowModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
