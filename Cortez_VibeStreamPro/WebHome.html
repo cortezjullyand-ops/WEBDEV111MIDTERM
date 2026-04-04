@@ -154,12 +154,12 @@
 
 <script>
     function playSong(fileName, songTitle) {
-        var player = document.getElementById('main-player');
-        var source = document.getElementById('player-source');
-        var titleDisplay = document.getElementById('current-song-title');
+        const player = document.getElementById('main-player');
+        const titleDisplay = document.getElementById('current-song-title');
 
-        source.src = fileName;
+        player.src = fileName;
         titleDisplay.innerText = songTitle;
+        
         player.load();
         player.play();
     }
