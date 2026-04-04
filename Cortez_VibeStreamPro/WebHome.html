@@ -61,7 +61,6 @@
             margin-top: 40px; 
             margin-bottom: 150px; 
             justify-content: center; 
-            /* Fixed width to force 3 items per row */
             max-width: 600px; 
         }
 
@@ -75,6 +74,12 @@
         .poster-card:hover { transform: scale(1.05); }
         
         .poster-card img { border-radius: 10px; border: 2px solid white; }
+
+        /* Customizing Audio Player for Dark Theme */
+        #main-player {
+            width: 40%;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+        }
 
     </style>
 </head>
@@ -145,8 +150,8 @@
         <span id="current-song-title">Select a Song</span>
     </div>
 
-    <audio id="main-player" controls style="width: 40%; filter: invert(100%);">
-        <source id="player-source" src="" type="audio/mpeg">
+    <audio id="main-player" controls>
+        Your browser does not support the audio element.
     </audio>
     
     <div style="color: #b3b3b3; font-size: 12px;">JulliLand &copy; 2026</div>
@@ -159,9 +164,17 @@
 
         player.src = fileName;
         titleDisplay.innerText = songTitle;
+
+        player.load(); 
         
-        player.load();
-        player.play();
+        const playPromise = player.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.error("Playback failed. Please check if the filename is correct on GitHub:", error);
+                alert("Audio file not found or could not be played. Check capitalization!");
+            });
+        }
     }
 </script>
 
