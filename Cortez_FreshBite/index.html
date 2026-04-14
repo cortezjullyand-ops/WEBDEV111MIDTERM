@@ -54,7 +54,7 @@
 
         /* --- UI COMPONENTS --- */
         .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
-        .meal-card { background: var(--white); border-radius: 18px; overflow: hidden; border: 1px solid var(--latte-accent); transition: 0.3s; }
+        .meal-card { background: var(--white); border-radius: 18px; overflow: hidden; border: 1px solid var(--latte-accent); transition: 0.3s; cursor: pointer; }
         .meal-card:hover { transform: translateY(-8px); border-color: var(--terracotta); box-shadow: 0 10px 20px rgba(93,64,55,0.1); }
         .meal-img { width: 100%; height: 180px; object-fit: cover; background: var(--latte-light); }
         .meal-info { padding: 20px; }
@@ -132,7 +132,6 @@
             <h1>Billing & Subscription</h1>
             <div class="data-card">
                 <h3>Active Plan: Family Box</h3>
-                <p>12 Meals/Week - Next billing: <strong>April 28, 2026</strong></p>
                 <p>Status: <strong id="subStatus" style="color:var(--terracotta)">ACTIVE</strong></p>
                 <div style="display:flex; gap:10px;">
                     <button class="btn-action" style="width:auto; padding:10px 20px;" onclick="toggleSub()">Pause Subscription</button>
@@ -156,6 +155,7 @@
                 <input type="text" id="helpIn" class="input-style" placeholder="Search FAQs..." onkeyup="filterFAQ()">
                 <div id="faqList">
                     <div class="faq-item" style="padding:10px 0; border-bottom:1px solid var(--latte-accent)"><b>Delivery areas?</b><p>We serve the entire Metro area.</p></div>
+                    <div class="faq-item" style="padding:10px 0; border-bottom:1px solid var(--latte-accent)"><b>Can I change my diet?</b><p>Yes, simply select a different category in the Library.</p></div>
                 </div>
             </div>
         </section>
@@ -171,9 +171,21 @@
     <script>
         let count = 0;
         const mealData = {
-            'veggs': [{ name: 'Summer Grilled Vegetables', img: 'summer grilled vegetables.jpg', desc: 'Seasonal mix.' }],
-            'meat': [{ name: 'Classic Steak', img: 'steak.jpg', desc: 'Grass-fed sirloin.' }],
-            'keto': [{ name: 'Keto Chicken', img: 'keto chicken.jpg', desc: 'Cheesy spinach.' }]
+            'veggs': [
+                { name: 'Summer Grilled Vegetables', img: 'summer grilled vegetables.jpg', desc: 'Seasonal mix.' },
+                { name: 'Veggie Stir Fry', img: 'veggs stir fry.jpg', desc: 'Ginger-soy tofu.' },
+                { name: 'Roasted Root Vegetables', img: 'roasted root vegetables.jpg', desc: 'Thyme-scented carrots.' }
+            ],
+            'meat': [
+                { name: 'Classic Steak', img: 'steak.jpg', desc: 'Grass-fed sirloin.' },
+                { name: 'Roasted Chicken', img: 'roasted chicken.jpg', desc: 'Lemon-herb bird.' },
+                { name: 'Hearty Chicken Soup', img: 'chicken soup.jpg', desc: 'Comfort in a bowl.' }
+            ],
+            'keto': [
+                { name: 'Keto Chicken', img: 'keto chicken.jpg', desc: 'Cheesy spinach.' },
+                { name: 'Keto Taco Casserole', img: 'keto taco caserole.jpg', desc: 'Zesty beef.' },
+                { name: 'Keto Beef & Broccoli', img: 'keto beef & broccoli.jpg', desc: 'Low-carb favorite.' }
+            ]
         };
 
         window.onload = function() {
@@ -200,12 +212,14 @@
         }
 
         function chooseDiet(type) {
+            document.getElementById('mainHeading').innerText = `Adding ${type} Meals`;
+            // Fixed: This now maps through all items in the array, not just the first one.
             document.getElementById('mealGrid').innerHTML = mealData[type].map(m => `
                 <div class="meal-card" onclick="addMeal('${m.name}')">
                     <img src="${m.img}" class="meal-img" onerror="this.src='https://via.placeholder.com/300x200'">
-                    <div class="meal-info"><h3>${m.name}</h3></div>
+                    <div class="meal-info"><h3>${m.name}</h3><p>${m.desc}</p></div>
                 </div>
-            `).join('') + `<button class="btn-action" onclick="startOrderFlow()">Back</button>`;
+            `).join('') + `<button class="btn-action" style="grid-column: 1/-1" onclick="startOrderFlow()">Back to Categories</button>`;
         }
 
         function addMeal(n) {
@@ -213,29 +227,27 @@
             addLog(`Meal Added: ${n}`);
         }
 
-        // --- SECTION LOGIC ---
-        function trackOrder(id) { alert(`Order #${id} is currently with our courier. Estimated arrival: 25 mins.`); }
+        function trackOrder(id) { alert(`Order #${id} is currently being prepared. Estimated dispatch: 2 hours.`); }
         function cancelOrder(id) { 
             if(confirm("Cancel this order?")) {
-                document.getElementById(`order-${id}`).style.opacity = '0.5';
                 document.getElementById(`status-${id}`).innerText = "CANCELLED";
                 document.getElementById(`status-${id}`).style.background = "#ffebee";
                 document.getElementById(`status-${id}`).style.color = "#c62828";
-                addLog(`Order #${id} was cancelled by user.`);
+                addLog(`Order #${id} was cancelled.`);
             }
         }
 
         function toggleSub() {
             const s = document.getElementById('subStatus');
-            const isActive = s.innerText === "ACTIVE";
-            s.innerText = isActive ? "PAUSED" : "ACTIVE";
-            s.style.color = isActive ? "#999" : "var(--terracotta)";
-            addLog(`Subscription status changed to ${s.innerText}`);
+            s.innerText = (s.innerText === "ACTIVE") ? "PAUSED" : "ACTIVE";
+            s.style.color = (s.innerText === "ACTIVE") ? "var(--terracotta)" : "#999";
+            addLog(`Subscription ${s.innerText.toLowerCase()}`);
         }
 
         function updateCard() { 
-            const card = prompt("Enter new card number (simulated):");
-            if(card) { alert("Payment method updated!"); addLog("Billing: Card updated."); }
+            prompt("Enter new card number:");
+            alert("Payment method updated!"); 
+            addLog("Billing: Card updated.");
         }
 
         function filterFAQ() {
@@ -245,8 +257,10 @@
 
         function addLog(m) {
             const l = document.getElementById('adminLogs');
-            l.innerHTML += `[${new Date().toLocaleTimeString()}] ${m}<br>`;
-            l.scrollTop = l.scrollHeight;
+            if(l) {
+                l.innerHTML += `[${new Date().toLocaleTimeString()}] ${m}<br>`;
+                l.scrollTop = l.scrollHeight;
+            }
         }
 
         function handleLogin() { localStorage.setItem("isLoggedIn", "true"); location.reload(); }
