@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshBite | Organic Kitchen</title>
+    <title>FreshBite Dashboard</title>
     <style>
         :root {
             --cream-bg: #FDFBF7;
@@ -16,9 +16,9 @@
         }
 
         body {
-            margin: 0; font-family: 'Segoe UI', sans-serif;
+            margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--cream-bg); color: var(--walnut-brown);
-            display: flex; min-height: 100vh;
+            display: flex; min-height: 100vh; overflow-x: hidden;
         }
 
         /* --- SIDEBAR --- */
@@ -26,47 +26,49 @@
             width: var(--sidebar-width); background: var(--white);
             border-right: 1px solid var(--latte-accent);
             display: flex; flex-direction: column; padding: 30px 20px;
-            position: fixed; height: 100vh; box-sizing: border-box; z-index: 100;
+            position: fixed; top: 0; left: 0; height: 100vh;
+            box-sizing: border-box; z-index: 100;
         }
 
-        .logo { font-size: 26px; font-weight: 800; margin-bottom: 40px; color: var(--walnut-brown); }
+        .logo { font-size: 26px; font-weight: 800; color: var(--walnut-brown); margin-bottom: 40px; cursor: pointer; }
+        .nav-label { font-size: 11px; text-transform: uppercase; color: #A4907C; font-weight: 700; letter-spacing: 1px; margin: 20px 0 10px 10px; }
         
         .nav-btn {
             background: none; border: none; padding: 12px 15px; text-align: left;
             font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 10px;
-            transition: 0.3s; color: #8D7B68; display: flex; align-items: center; gap: 10px;
+            transition: 0.3s; color: var(--walnut-brown); display: flex; align-items: center; gap: 10px;
         }
-
         .nav-btn:hover { background: var(--latte-light); }
         .nav-btn.active { background: var(--walnut-brown); color: white; }
 
         .box-counter {
-            background: var(--latte-light); padding: 15px; border-radius: 12px;
-            margin-top: 20px; text-align: center; border: 1px solid var(--latte-accent);
+            background: var(--latte-light); padding: 15px; border-radius: 12px; margin-top: 20px;
+            text-align: center; border: 1px solid var(--latte-accent);
         }
 
-        /* --- MAIN --- */
-        .dashboard-main { margin-left: var(--sidebar-width); flex: 1; padding: 50px 80px; }
-        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        /* --- MAIN CONTENT --- */
+        .dashboard-main { margin-left: var(--sidebar-width); flex: 1; padding: 50px 80px; max-width: 1300px; }
+        .view-section { display: none; animation: slideUp 0.4s ease forwards; }
         .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- UI COMPONENTS --- */
         .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
-        .meal-card { 
-            background: var(--white); border-radius: 18px; overflow: hidden; 
-            border: 1px solid var(--latte-accent); transition: 0.3s; cursor: pointer;
-        }
-        .meal-card:hover { transform: translateY(-5px); border-color: var(--terracotta); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .meal-img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
+        .meal-card { background: var(--white); border-radius: 18px; overflow: hidden; border: 1px solid var(--latte-accent); transition: 0.3s; }
+        .meal-card:hover { transform: translateY(-8px); border-color: var(--terracotta); box-shadow: 0 10px 20px rgba(93,64,55,0.1); }
+        .meal-img { width: 100%; height: 180px; object-fit: cover; background: var(--latte-light); }
         .meal-info { padding: 20px; }
 
-        .data-card { background: var(--white); padding: 30px; border-radius: 20px; border: 1px solid var(--latte-accent); margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0 20px 0; border: 1px solid var(--latte-accent); border-radius: 10px; box-sizing: border-box; }
+        .data-card { background: var(--white); padding: 30px; border-radius: 20px; border: 1px solid var(--latte-accent); margin-bottom: 20px; position: relative; }
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #e3f2fd; color: #1976d2; }
+        .input-style { width: 100%; padding: 14px; margin: 10px 0 20px 0; border: 1px solid var(--latte-accent); border-radius: 10px; font-size: 16px; box-sizing: border-box; background: var(--cream-bg); }
         
-        .btn-action { width: 100%; padding: 15px; background: var(--walnut-brown); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-action { width: 100%; padding: 15px; background: var(--walnut-brown); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .btn-action:hover { background: var(--terracotta); }
-
-        .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; backdrop-filter: blur(5px); display: none; }
+        .btn-outline { background: transparent; border: 1px solid var(--walnut-brown); color: var(--walnut-brown); }
+        
+        /* --- AUTH DRAWER --- */
+        .drawer-bg { position: fixed; inset: 0; background: rgba(93, 64, 55, 0.4); z-index: 2000; backdrop-filter: blur(5px); display: none; }
         #loginDrawer { position: fixed; top: 0; right: -450px; width: 400px; height: 100%; background: var(--white); z-index: 2001; transition: 0.5s; padding: 80px 50px; box-sizing: border-box; }
         #loginDrawer.open { right: 0; }
     </style>
@@ -76,23 +78,31 @@
     <div class="drawer-bg" id="drawerBg"></div>
     <div id="loginDrawer">
         <h2>Welcome Back</h2>
-        <input type="text" id="loginEmail" placeholder="Email Address">
+        <input type="text" id="loginEmail" placeholder="Enter Email" class="input-style">
         <button class="btn-action" onclick="handleLogin()">Access Dashboard</button>
     </div>
 
     <aside class="sidebar">
         <div class="logo">🥗 FreshBite</div>
-        <div class="nav-btn active" onclick="switchView('library', this)">🏠 Meal Library</div>
-        <button class="nav-btn" onclick="switchView('profile', this)">👤 User Profile</button>
-        <button class="nav-btn" onclick="switchView('support', this)">🎧 Help Center</button>
-        <button class="nav-btn" onclick="switchView('admin', this)">🛡️ Admin Panel</button>
-
-        <div class="box-counter">
-            <div style="font-size: 11px; font-weight:700; opacity: 0.6">MY BOX</div>
-            <div style="font-size: 22px; font-weight: 800; color: var(--terracotta);" id="sidebarCount">0 Meals</div>
+        <div class="nav-label">General</div>
+        <div class="nav-group">
+            <button class="nav-btn active" onclick="switchView('library', this)">🏠 Meal Library</button>
+            <button class="nav-btn" onclick="switchView('orders', this)">📦 My Orders</button>
+            <button class="nav-btn" onclick="switchView('billing', this)">💳 Billing</button>
         </div>
 
-        <button class="btn-action" style="margin-top: auto; background: #eee; color: #333;" onclick="handleLogout()">Logout</button>
+        <div class="nav-label">Preferences</div>
+        <div class="nav-group">
+            <button class="nav-btn" onclick="switchView('profile', this)">👤 User Profile</button>
+            <button class="nav-btn" onclick="switchView('support', this)">🎧 Help Center</button>
+            <button class="nav-btn" onclick="switchView('admin', this)">🛡️ Admin Panel</button>
+        </div>
+
+        <div class="box-counter">
+            <div style="font-size: 11px; font-weight:700; color: #A4907C;">MY BOX</div>
+            <div style="font-size: 22px; font-weight: 800; color: var(--terracotta);" id="sidebarCount">0 Meals</div>
+        </div>
+        <button class="btn-action" style="margin-top:auto; background:var(--latte-accent); color:var(--walnut-brown)" onclick="handleLogout()">Logout</button>
     </aside>
 
     <main class="dashboard-main" id="mainContent">
@@ -101,28 +111,51 @@
             <div class="meal-grid" id="mealGrid"></div>
         </section>
 
+        <section id="view-orders" class="view-section">
+            <h1>Order History</h1>
+            <div id="orderContainer">
+                <div class="data-card" id="order-8821">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>Order #8821</strong><br><small>April 15, 2026</small></div>
+                        <span class="status-pill" id="status-8821">PREPARING</span>
+                    </div>
+                    <p style="margin-top:15px; font-size:14px;">6x Keto Performance Meals</p>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-action btn-outline" style="width:auto; padding:8px 15px;" onclick="trackOrder('8821')">Track Trip</button>
+                        <button class="btn-action" style="width:auto; padding:8px 15px; background:#f44336;" onclick="cancelOrder('8821')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-billing" class="view-section">
+            <h1>Billing & Subscription</h1>
+            <div class="data-card">
+                <h3>Active Plan: Family Box</h3>
+                <p>12 Meals/Week - Next billing: <strong>April 28, 2026</strong></p>
+                <p>Status: <strong id="subStatus" style="color:var(--terracotta)">ACTIVE</strong></p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-action" style="width:auto; padding:10px 20px;" onclick="toggleSub()">Pause Subscription</button>
+                    <button class="btn-action btn-outline" style="width:auto; padding:10px 20px;" onclick="updateCard()">Update Payment</button>
+                </div>
+            </div>
+        </section>
+
         <section id="view-profile" class="view-section">
             <h1>User Profile</h1>
             <div class="data-card" style="max-width: 500px;">
-                <label><b>FULL NAME</b></label>
-                <input type="text" id="userNameInput" value="Alex Johnson">
-                <label><b>EMAIL ADDRESS</b></label>
-                <input type="text" id="profileEmail" disabled>
-                <button class="btn-action" onclick="saveProfile()">Update Identity</button>
+                <label style="font-weight:700">FULL NAME</label>
+                <input type="text" id="profName" class="input-style" value="Alex Johnson">
+                <button class="btn-action" onclick="alert('Profile Saved!')">Save Changes</button>
             </div>
         </section>
 
         <section id="view-support" class="view-section">
             <h1>Help Center</h1>
             <div class="data-card">
-                <input type="text" id="helpSearch" placeholder="Search FAQ (e.g., 'delivery')..." onkeyup="searchHelp()">
-                <div id="faqContainer">
-                    <div class="faq-item" style="padding:15px 0; border-bottom:1px solid #eee;">
-                        <b>When is delivery?</b><p>We dispatch every Monday and Thursday.</p>
-                    </div>
-                    <div class="faq-item" style="padding:15px 0; border-bottom:1px solid #eee;">
-                        <b>Can I skip a week?</b><p>Yes, use the Billing tab to pause your subscription.</p>
-                    </div>
+                <input type="text" id="helpIn" class="input-style" placeholder="Search FAQs..." onkeyup="filterFAQ()">
+                <div id="faqList">
+                    <div class="faq-item" style="padding:10px 0; border-bottom:1px solid var(--latte-accent)"><b>Delivery areas?</b><p>We serve the entire Metro area.</p></div>
                 </div>
             </div>
         </section>
@@ -130,40 +163,22 @@
         <section id="view-admin" class="view-section">
             <h1>🛡️ Admin Panel</h1>
             <div class="data-card">
-                <h3>Live System Logs</h3>
-                <div id="adminLogs" style="background:#f9f9f9; padding:15px; border-radius:10px; height:200px; overflow-y:auto; font-family:monospace; font-size:12px;">
-                    [SYSTEM]: Terminal initialized...<br>
-                </div>
-                <button class="btn-action" style="width:auto; margin-top:10px; padding:10px 20px;" onclick="clearLogs()">Clear Logs</button>
+                <div id="adminLogs" style="background:#1e1e1e; color:#0f0; padding:15px; height:150px; overflow-y:auto; font-family:monospace; font-size:12px;"></div>
             </div>
         </section>
     </main>
 
     <script>
-        let order = { count: 0 };
+        let count = 0;
         const mealData = {
-            'veggs': [
-                { name: 'Summer Grilled Vegetables', img: 'summer grilled vegetables.jpg', desc: 'Seasonal mix.' },
-                { name: 'Veggie Stir Fry', img: 'veggs stir fry.jpg', desc: 'Ginger-soy tofu.' }
-            ],
-            'meat': [
-                { name: 'Classic Steak', img: 'steak.jpg', desc: 'Grass-fed sirloin.' },
-                { name: 'Roasted Chicken', img: 'roasted chicken.jpg', desc: 'Lemon-herb bird.' }
-            ],
-            'keto': [
-                { name: 'Keto Chicken', img: 'keto chicken.jpg', desc: 'Cheesy spinach stuffed.' },
-                { name: 'Keto Taco Casserole', img: 'keto taco caserole.jpg', desc: 'Zesty beef.' }
-            ]
+            'veggs': [{ name: 'Summer Grilled Vegetables', img: 'summer grilled vegetables.jpg', desc: 'Seasonal mix.' }],
+            'meat': [{ name: 'Classic Steak', img: 'steak.jpg', desc: 'Grass-fed sirloin.' }],
+            'keto': [{ name: 'Keto Chicken', img: 'keto chicken.jpg', desc: 'Cheesy spinach.' }]
         };
 
         window.onload = function() {
-            if (localStorage.getItem("isLoggedIn")) {
-                document.getElementById('profileEmail').value = localStorage.getItem("userEmail");
-                startOrderFlow();
-            } else {
-                document.getElementById('loginDrawer').classList.add('open');
-                document.getElementById('drawerBg').style.display = 'block';
-            }
+            if (localStorage.getItem("isLoggedIn")) { startOrderFlow(); } 
+            else { document.getElementById('loginDrawer').classList.add('open'); document.getElementById('drawerBg').style.display = 'block'; }
         };
 
         function switchView(id, btn) {
@@ -171,12 +186,12 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`view-${id}`).classList.add('active');
             btn.classList.add('active');
-            logAdmin(`Switched to ${id} view`);
+            addLog(`View switched to ${id}`);
         }
 
         function startOrderFlow() {
             const grid = document.getElementById('mealGrid');
-            document.getElementById('mainHeading').innerText = "Select Your Diet Type";
+            document.getElementById('mainHeading').innerText = "Select Your Diet";
             grid.innerHTML = `
                 <div class="meal-card" onclick="chooseDiet('keto')"><img src="keto chicken.jpg" class="meal-img"><div class="meal-info"><h3>Keto</h3></div></div>
                 <div class="meal-card" onclick="chooseDiet('veggs')"><img src="summer grilled vegetables.jpg" class="meal-img"><div class="meal-info"><h3>Vegetarian</h3></div></div>
@@ -185,51 +200,56 @@
         }
 
         function chooseDiet(type) {
-            const grid = document.getElementById('mealGrid');
-            document.getElementById('mainHeading').innerText = `Adding ${type} Meals`;
-            grid.innerHTML = mealData[type].map(m => `
+            document.getElementById('mealGrid').innerHTML = mealData[type].map(m => `
                 <div class="meal-card" onclick="addMeal('${m.name}')">
                     <img src="${m.img}" class="meal-img" onerror="this.src='https://via.placeholder.com/300x200'">
-                    <div class="meal-info"><h3>${m.name}</h3><p>${m.desc}</p></div>
+                    <div class="meal-info"><h3>${m.name}</h3></div>
                 </div>
             `).join('') + `<button class="btn-action" onclick="startOrderFlow()">Back</button>`;
         }
 
-        function addMeal(name) {
-            order.count++;
-            document.getElementById('sidebarCount').innerText = `${order.count} Meals`;
-            logAdmin(`User added meal: ${name}`);
+        function addMeal(n) {
+            count++; document.getElementById('sidebarCount').innerText = `${count} Meals`;
+            addLog(`Meal Added: ${n}`);
         }
 
-        function saveProfile() {
-            const name = document.getElementById('userNameInput').value;
-            logAdmin(`Profile updated: ${name}`);
-            alert("Profile Saved!");
-        }
-
-        function searchHelp() {
-            const term = document.getElementById('helpSearch').value.toLowerCase();
-            document.querySelectorAll('.faq-item').forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(term) ? 'block' : 'none';
-            });
-        }
-
-        function logAdmin(msg) {
-            const logs = document.getElementById('adminLogs');
-            logs.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
-            logs.scrollTop = logs.scrollHeight;
-        }
-
-        function clearLogs() { document.getElementById('adminLogs').innerHTML = "[SYSTEM]: Logs cleared.<br>"; }
-
-        function handleLogin() {
-            const email = document.getElementById('loginEmail').value;
-            if(email.includes('@')) {
-                localStorage.setItem("isLoggedIn", "true");
-                localStorage.setItem("userEmail", email);
-                location.reload();
+        // --- SECTION LOGIC ---
+        function trackOrder(id) { alert(`Order #${id} is currently with our courier. Estimated arrival: 25 mins.`); }
+        function cancelOrder(id) { 
+            if(confirm("Cancel this order?")) {
+                document.getElementById(`order-${id}`).style.opacity = '0.5';
+                document.getElementById(`status-${id}`).innerText = "CANCELLED";
+                document.getElementById(`status-${id}`).style.background = "#ffebee";
+                document.getElementById(`status-${id}`).style.color = "#c62828";
+                addLog(`Order #${id} was cancelled by user.`);
             }
         }
+
+        function toggleSub() {
+            const s = document.getElementById('subStatus');
+            const isActive = s.innerText === "ACTIVE";
+            s.innerText = isActive ? "PAUSED" : "ACTIVE";
+            s.style.color = isActive ? "#999" : "var(--terracotta)";
+            addLog(`Subscription status changed to ${s.innerText}`);
+        }
+
+        function updateCard() { 
+            const card = prompt("Enter new card number (simulated):");
+            if(card) { alert("Payment method updated!"); addLog("Billing: Card updated."); }
+        }
+
+        function filterFAQ() {
+            const q = document.getElementById('helpIn').value.toLowerCase();
+            document.querySelectorAll('.faq-item').forEach(i => i.style.display = i.innerText.toLowerCase().includes(q) ? 'block' : 'none');
+        }
+
+        function addLog(m) {
+            const l = document.getElementById('adminLogs');
+            l.innerHTML += `[${new Date().toLocaleTimeString()}] ${m}<br>`;
+            l.scrollTop = l.scrollHeight;
+        }
+
+        function handleLogin() { localStorage.setItem("isLoggedIn", "true"); location.reload(); }
         function handleLogout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
