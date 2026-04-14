@@ -4,19 +4,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Luna Vista Resort | Login</title>
     <style>
-        * { box-sizing: border-box; }
+        :root {
+            --ocean-blue: #1e3c72;
+            --accent-cyan: #00d2ff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            background-attachment: fixed;
+            background-color: var(--ocean-blue);
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* AMBIENT BLURRED BACKGROUND */
+        .bg-carousel-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .bg-slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            /* The blur effect */
+            filter: blur(60px) brightness(0.4) saturate(1.4);
+            transition: opacity 1.5s ease-in-out;
+            transform: scale(1.1); /* Hides edges created by blur */
+        }
+
+        .bg-slide.active-bg { opacity: 1; }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(10, 25, 47, 0.7) 100%);
+            z-index: -1;
         }
 
         .resort-header {
@@ -42,13 +80,14 @@
             padding: 20px;
             max-width: 1100px;
             width: 100%;
+            z-index: 1;
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             overflow: hidden;
@@ -77,8 +116,8 @@
             justify-content: center;
         }
 
-        .login-box h2 { margin-top: 0; font-size: 1.8rem; }
-        .login-box h6 { color: #d1e3ff; margin-bottom: 30px; font-weight: 300; font-size: 0.9rem; }
+        .login-box h2 { margin-top: 0; font-size: 1.8rem; line-height: 1.2; }
+        .login-box h6 { color: #d1e3ff; margin-bottom: 30px; font-weight: 300; font-size: 0.9rem; letter-spacing: 1px; }
 
         label {
             display: block;
@@ -88,6 +127,7 @@
             color: #add8e6;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: bold;
         }
 
         input[type="text"], input[type="password"] {
@@ -99,6 +139,7 @@
             background: rgba(255, 255, 255, 0.9);
             font-size: 16px;
             outline: none;
+            color: #333;
         }
 
         button {
@@ -106,12 +147,11 @@
             padding: 16px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(to right, #3a7bd5, #00d2ff);
+            background: linear-gradient(to right, #3a7bd5, var(--accent-cyan));
             color: white;
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
-            transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 10px;
@@ -131,31 +171,32 @@
         }
 
         .dot {
-            height: 8px;
-            width: 8px;
-            margin: 0 4px;
+            height: 8px; width: 8px; margin: 0 4px;
             background-color: rgba(255,255,255,0.4);
             border-radius: 50%;
             display: inline-block;
-            transition: 0.4s;
         }
 
         .active { background-color: #fff; width: 24px; border-radius: 4px; }
 
         .fade { animation: fadeEffect 1.5s; }
-        @keyframes fadeEffect {
-            from { opacity: 0.6; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeEffect { from { opacity: 0.6; } to { opacity: 1; } }
 
         @media (max-width: 850px) {
             .main-container { flex-direction: column; }
-            .slideshow-box { flex: none; width: 100%; }
             .mySlides img { height: 300px; }
         }
     </style>
 </head>
 <body>
+
+<div class="bg-carousel-container">
+    <img src="Slides.jpg" class="bg-slide active-bg">
+    <img src="Slides2.jpg" class="bg-slide">
+    <img src="Slides3.jpg" class="bg-slide">
+    <img src="Slides4.jpg" class="bg-slide">
+</div>
+<div class="bg-overlay"></div>
 
 <header class="resort-header">
     <h2>Luna Vista Resort</h2>
@@ -187,7 +228,7 @@
     <section class="login-box glass-panel">
         <h2>WELCOME TO LUNA VISTA RESORT</h2>
         <h6>Please Enter the Following to Continue</h6>
-        <form action="Reservation.html">
+        <form action="LunaVista_Reservation.html">
             <label>Username</label>
             <input type="text" required>
             
@@ -205,17 +246,25 @@
 
     function showSlides() {
         let slides = document.getElementsByClassName("mySlides");
+        let bgSlides = document.getElementsByClassName("bg-slide");
         let dots = document.getElementsByClassName("dot");
+
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";  
+            bgSlides[i].classList.remove("active-bg");
         }
+        
         slideIndex++;
         if (slideIndex > slides.length) {slideIndex = 1}    
+        
         for (let i = 0; i < dots.length; i++) {
             dots[i].className = dots[i].className.replace(" active", "");
         }
+
         slides[slideIndex-1].style.display = "block";  
+        bgSlides[slideIndex-1].classList.add("active-bg");
         dots[slideIndex-1].className += " active";
+        
         setTimeout(showSlides, 3500);
     }
 </script>
