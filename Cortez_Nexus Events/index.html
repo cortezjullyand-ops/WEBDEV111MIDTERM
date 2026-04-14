@@ -13,6 +13,21 @@
             --white: #ffffff;
         }
 
+        /* NEW ANIMATIONS */
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
         body {
             margin: 0;
             font-family: 'Arial Black', sans-serif;
@@ -49,35 +64,31 @@
 
         .nav-links button:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--ink-black); }
 
-        /* UPDATED: HEADER WITH BACKGROUND IMAGE BEHIND EXISTING TEXT */
         .poster-header {
             position: relative;
-            padding: 120px 40px; /* Adjusted padding for better visibility of BG */
+            padding: 120px 40px;
             text-align: left;
             border-bottom: 6px solid var(--ink-black);
-            background: var(--neon-pink); /* Fallback color */
-            min-height: 400px; /* Ensure enough height to show image */
+            background: var(--neon-pink);
+            min-height: 400px;
             display: flex;
             align-items: center;
             overflow: hidden;
         }
 
-        /* The pseudo-element places the image behind the text */
         .poster-header::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            /* Kept image name: Nexus_Img1.jpg */
             background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('Img1.jpg');
             background-size: cover;
             background-position: center;
-            z-index: 1; /* Puts image at bottom layer of header */
+            z-index: 1;
         }
 
-        /* Kept text style 'as is' */
         .poster-header h1 {
             position: relative;
-            z-index: 2; /* Forces text in front of image */
+            z-index: 2;
             font-size: clamp(60px, 12vw, 150px);
             margin: 0;
             line-height: 0.85;
@@ -114,24 +125,6 @@
             z-index: 2000;
         }
 
-        .pop-card {
-            background: var(--white);
-            padding: 50px;
-            border: 8px solid var(--ink-black);
-            box-shadow: 20px 20px 0px var(--ink-black);
-            width: 400px;
-            text-align: center;
-        }
-
-        .pop-card input {
-            width: 90%;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 4px solid var(--ink-black);
-            font-size: 18px;
-            font-family: inherit;
-        }
-
         .event-container {
             padding: 80px 40px;
             display: grid;
@@ -143,15 +136,19 @@
             background: var(--white);
             border: 6px solid var(--ink-black);
             box-shadow: 10px 10px 0px var(--ink-black);
-            transition: 0.2s;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             overflow: hidden;
+        }
+
+        .event-card:hover {
+            transform: scale(1.02) rotate(-1deg);
+            box-shadow: 15px 15px 0px var(--neon-pink);
         }
 
         .event-card img { width: 100%; height: 350px; object-fit: cover; border-bottom: 6px solid var(--ink-black); }
         .event-card-body { padding: 25px; }
 
-        /* TICKET WALLET */
         .ticket-wallet {
             padding: 60px 40px;
             background: var(--ink-black);
@@ -174,21 +171,7 @@
             border-right: 4px solid black;
             border-top: 4px solid black;
             border-bottom: 4px solid black;
-        }
-
-        .guestlist-btn {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            background: var(--neon-pink);
-            border: 5px solid var(--ink-black);
-            padding: 20px 40px;
-            font-size: 20px;
-            font-weight: 900;
-            box-shadow: 8px 8px 0px var(--ink-black);
-            cursor: pointer;
-            z-index: 100;
-            color: white;
+            animation: slideIn 0.4s ease-out;
         }
 
         .modal {
@@ -207,6 +190,17 @@
             padding: 40px;
             width: 450px;
             box-shadow: 25px 25px 0px var(--ink-black);
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .booking-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 4px solid var(--ink-black);
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
         }
 
         .btn-xl {
@@ -219,6 +213,23 @@
             margin-top: 20px;
             cursor: pointer;
             box-shadow: 6px 6px 0px var(--ink-black);
+            transition: 0.1s;
+        }
+
+        .btn-xl:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--ink-black); }
+
+        .guestlist-btn {
+            position: fixed;
+            bottom: 40px; right: 40px;
+            background: var(--neon-pink);
+            border: 5px solid var(--ink-black);
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: 900;
+            box-shadow: 8px 8px 0px var(--ink-black);
+            cursor: pointer;
+            z-index: 100;
+            color: white;
         }
     </style>
 </head>
@@ -234,10 +245,10 @@
     </nav>
 
     <div class="auth-overlay" id="authOverlay">
-        <div class="pop-card">
+        <div class="modal-content" style="text-align: center;">
             <h1>NEXUS ID</h1>
-            <input type="text" id="loginUser" placeholder="GUEST NAME">
-            <input type="password" placeholder="PASSWORD">
+            <input type="text" id="loginUser" class="booking-input" placeholder="GUEST NAME">
+            <input type="password" class="booking-input" placeholder="PASSWORD">
             <button class="btn-xl" style="background: var(--lemon-yellow);" onclick="login()">GET ACCESS</button>
         </div>
     </div>
@@ -288,32 +299,67 @@
             document.getElementById('authOverlay').style.display='none';
         }
 
-        // functional booking logic
         function openOrder(name, img) {
             const modal = document.getElementById('masterModal');
             const target = document.getElementById('modalTarget');
             modal.style.display = 'flex';
+            
             target.innerHTML = `
-                <img src="${img}" style="width:100%; height:150px; object-fit:cover; border:4px solid #000;">
-                <h2>${name}</h2>
-                <button class="btn-xl" style="background:var(--lemon-yellow)" onclick="book('${name}', 'VIP PASS')">VIP PASS - $200</button>
-                <button class="btn-xl" style="background:var(--white)" onclick="book('${name}', 'GEN ADMISSION')">GEN AD - $80</button>
-                <p onclick="closeModal()" style="cursor:pointer; text-decoration:underline; margin-top:15px; text-align:center;">CANCEL</p>
+                <img src="${img}" style="width:100%; height:120px; object-fit:cover; border:4px solid #000;">
+                <h2 style="margin: 15px 0 5px 0;">${name}</h2>
+                <p style="margin-bottom: 15px; font-size: 14px;">ENTER SECURE DETAILS TO PROCEED:</p>
+                
+                <input type="email" id="bookEmail" class="booking-input" placeholder="EMAIL ADDRESS">
+                <select id="ticketQty" class="booking-input">
+                    <option value="1">1 TICKET</option>
+                    <option value="2">2 TICKETS</option>
+                    <option value="4">4 TICKETS (SQUAD PACK)</option>
+                </select>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="btn-xl" style="background:var(--lemon-yellow); font-size: 16px; margin-top:10px;" 
+                            onclick="processBooking('${name}', 'VIP PASS')">VIP $200</button>
+                    <button class="btn-xl" style="background:var(--white); font-size: 16px; margin-top:10px;" 
+                            onclick="processBooking('${name}', 'GEN AD')">GEN $80</button>
+                </div>
+                <p onclick="closeModal()" style="cursor:pointer; text-decoration:underline; margin-top:15px; text-align:center;">ABORT MISSION</p>
             `;
         }
 
-        function book(event, tier) {
+        function processBooking(event, tier) {
+            const email = document.getElementById('bookEmail').value;
+            const qty = document.getElementById('ticketQty').value;
+
+            if(!email.includes('@')) {
+                alert("ACCESS DENIED: INVALID EMAIL");
+                return;
+            }
+
+            const target = document.getElementById('modalTarget');
+            target.innerHTML = `<h2 style="animation: glitch 0.2s infinite; text-align:center; padding: 40px;">ENCRYPTING...</h2>`;
+            
+            setTimeout(() => {
+                book(event, tier, qty);
+            }, 800);
+        }
+
+        function book(event, tier, qty) {
             const id = "NX-" + Math.floor(Math.random()*8999 + 1000);
-            session.tickets.push({ event, tier, id });
+            session.tickets.push({ event, tier, id, qty });
             session.guestlist.unshift(session.user);
             
             const target = document.getElementById('modalTarget');
             target.innerHTML = `
-                <h1 style="color:var(--neon-pink)">ACCESS GRANTED</h1>
-                <p><b>GUEST:</b> ${session.user}</p>
-                <p><b>EVENT:</b> ${event}</p>
-                <div style="background:black; color:white; padding:20px; text-align:center; font-family:monospace;">${id}</div>
-                <button class="btn-xl" onclick="refreshWallet(); closeModal();">ADD TO VAULT</button>
+                <div style="border: 4px solid var(--neon-pink); padding: 10px; text-align: center;">
+                    <h1 style="color:var(--neon-pink); margin: 0;">ACCESS GRANTED</h1>
+                    <p style="font-size: 12px; margin-top: 5px;">ID: ${id}</p>
+                </div>
+                <div style="text-align: left; margin: 20px 0; background: #f0f0f0; padding: 15px; border: 2px solid black;">
+                    <p><b>GUEST:</b> ${session.user}</p>
+                    <p><b>TIER:</b> ${tier}</p>
+                    <p><b>QTY:</b> ${qty} UNIT(S)</p>
+                </div>
+                <button class="btn-xl" style="background: var(--electric-blue)" onclick="refreshWallet(); closeModal();">SYNC TO VAULT</button>
             `;
         }
 
@@ -322,14 +368,13 @@
             document.getElementById('emptyMsg').style.display = 'none';
             wallet.innerHTML = session.tickets.map(t => `
                 <div class="ticket-stub">
-                    <small>${t.id}</small>
+                    <small style="letter-spacing: 2px; font-weight:bold;">${t.id}</small>
                     <h3 style="margin:5px 0">${t.event}</h3>
-                    <p style="margin:0">${t.tier}</p>
+                    <p style="margin:0; font-size: 12px;">${t.tier} | QTY: ${t.qty}</p>
                 </div>
             `).join('');
         }
 
-        // Functional navigation & buttons
         function showVenue() {
             const modal = document.getElementById('masterModal');
             const target = document.getElementById('modalTarget');
