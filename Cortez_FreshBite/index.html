@@ -3,391 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshBite</title>
+    <title>FreshBite | Organic Kitchen</title>
     <style>
         :root {
-            --fresh-green: #4CAF50;
-            --deep-orange: #FF5722;
-            --warm-yellow: #FFC107;
-            --dark-text: #2D3436;
-            --light-bg: #F4F7F6;
+            --cream-bg: #FDFBF7;
+            --latte-light: #F5F0E6;
+            --latte-accent: #E8DCC4;
+            --walnut-brown: #5D4037;
+            --terracotta: #D35400;
+            --sage-muted: #8E9775;
             --white: #ffffff;
-            --sidebar-width: 260px;
-            --admin-purple: #673AB7;
+            --sidebar-width: 280px;
+            --shadow: 0 10px 30px rgba(93, 64, 55, 0.08);
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--dark-text);
+            font-family: 'Outfit', 'Segoe UI', sans-serif;
+            background-color: var(--cream-bg);
+            color: var(--walnut-brown);
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden;
+        }
+
+        /* --- SMOOTH ANIMATIONS --- */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* --- SIDEBAR --- */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--white);
-            border-right: 1px solid #e0e0e0;
+            border-right: 1px solid var(--latte-accent);
             display: flex;
             flex-direction: column;
-            padding: 30px 20px;
+            padding: 40px 25px;
             position: fixed;
-            top: 0; left: 0; height: 100vh;
+            height: 100vh;
             box-sizing: border-box;
             z-index: 100;
         }
 
-        .logo { font-size: 26px; font-weight: 800; color: var(--fresh-green); margin-bottom: 40px; padding-left: 10px; cursor: pointer; }
-        .nav-label { font-size: 11px; text-transform: uppercase; color: #A0A0A0; font-weight: 700; letter-spacing: 1px; margin: 20px 0 10px 10px; }
-        .nav-group { display: flex; flex-direction: column; gap: 5px; }
+        .logo { 
+            font-size: 24px; font-weight: 800; color: var(--walnut-brown); 
+            margin-bottom: 40px; display: flex; align-items: center; gap: 10px;
+        }
 
         .nav-btn {
-            background: none; border: none; padding: 12px 15px; text-align: left;
-            font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 10px;
-            transition: all 0.2s ease; color: var(--dark-text); display: flex; align-items: center; gap: 10px;
+            background: none; border: none; padding: 14px 18px; text-align: left;
+            font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 12px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #8D7B68;
+            display: flex; align-items: center; gap: 12px; margin-bottom: 5px;
         }
-        .nav-btn:hover { background: #f0f7f1; color: var(--fresh-green); }
-        .nav-btn.active { background: var(--fresh-green); color: white; }
-        .nav-btn.admin-active { background: var(--admin-purple); color: white; }
+
+        .nav-btn:hover { background: var(--latte-light); color: var(--walnut-brown); }
+        .nav-btn.active { background: var(--walnut-brown); color: var(--cream-bg); box-shadow: 0 4px 12px rgba(93, 64, 55, 0.2); }
 
         .box-counter {
-            background: #e8f5e9; padding: 15px; border-radius: 12px; margin-top: 20px;
-            text-align: center; border: 1px solid var(--fresh-green);
+            background: var(--latte-light); padding: 20px; border-radius: 15px;
+            margin-top: 30px; text-align: center; border: 1px solid var(--latte-accent);
         }
-
-        .logout-container { margin-top: auto; padding-top: 20px; border-top: 1px solid #eee; }
 
         /* --- MAIN CONTENT --- */
         .dashboard-main {
             margin-left: var(--sidebar-width);
-            flex: 1; padding: 50px 80px; max-width: 1300px;
-            transition: filter 0.4s ease;
-        }
-        .view-section { display: none; animation: fadeIn 0.3s ease; }
-        .view-section.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- UI COMPONENTS --- */
-        .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
-        .meal-card { background: var(--white); border-radius: 18px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid transparent; }
-        .meal-card:hover { transform: translateY(-8px); border-color: var(--fresh-green); }
-        .meal-img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
-        .meal-info { padding: 20px; }
-
-        .data-card { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #e3f2fd; color: #1976d2; }
-        
-        .admin-stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .stat-box { padding: 20px; border-radius: 15px; background: #f9f9f9; border: 1px solid #eee; }
-
-        /* --- AUTH & MODALS --- */
-        .locked { filter: blur(15px); pointer-events: none; }
-        
-        .drawer-bg { 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.4); 
-            z-index: 2000; 
-            backdrop-filter: blur(5px);
-            display: none;
+            flex: 1; padding: 60px 80px;
         }
 
-        .drawer-overlay { 
-            position: fixed; 
-            top: 0; right: -450px; 
-            width: 400px; height: 100%; 
-            background: var(--white); 
-            z-index: 2001; 
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            padding: 80px 50px; 
-            box-sizing: border-box; 
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: slideUp 0.5s ease forwards; }
+
+        /* --- CARDS & UI --- */
+        .card { 
+            background: var(--white); border-radius: 24px; padding: 35px; 
+            box-shadow: var(--shadow); border: 1px solid rgba(232, 220, 196, 0.4);
+            margin-bottom: 30px;
         }
 
-        .drawer-overlay.open { right: 0; }
+        .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .meal-card { 
+            background: var(--white); border-radius: 20px; overflow: hidden; 
+            transition: 0.4s; border: 1px solid var(--latte-accent);
+        }
+        .meal-card:hover { transform: scale(1.03); box-shadow: var(--shadow); border-color: var(--terracotta); }
 
-        .input-style { width: 100%; padding: 14px; margin: 10px 0 20px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .btn-action { width: 100%; padding: 15px; background: var(--fresh-green); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 8px; color: #A4907C; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .modal-content { background: var(--white); padding: 45px; border-radius: 25px; width: 480px; text-align: center; }
+        input { 
+            width: 100%; padding: 14px; background: var(--cream-bg); 
+            border: 1px solid var(--latte-accent); border-radius: 12px; 
+            font-family: inherit; font-size: 15px; color: var(--walnut-brown);
+        }
+
+        .btn-action { 
+            padding: 14px 28px; background: var(--walnut-brown); color: white; 
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-action:hover { background: var(--terracotta); transform: translateY(-2px); }
+
+        /* --- LOGIN DRAWER --- */
+        #loginDrawer {
+            position: fixed; top: 0; right: -500px; width: 450px; height: 100%;
+            background: var(--white); z-index: 2001; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 100px 60px; box-shadow: -10px 0 50px rgba(0,0,0,0.1);
+        }
+        #loginDrawer.open { right: 0; }
+        .drawer-blur { position: fixed; inset: 0; background: rgba(93, 64, 55, 0.2); backdrop-filter: blur(8px); display: none; z-index: 2000; }
     </style>
 </head>
 <body>
 
-    <div class="drawer-bg" id="drawerBg"></div>
-    
-    <div class="drawer-overlay" id="loginDrawer">
-        <h2 style="margin-top:0">Welcome Back</h2>
-        <p style="color:#666; margin-bottom: 30px;">Sign in to your FreshBite account.</p>
-        <label style="font-size:12px; font-weight:700">EMAIL ADDRESS</label>
-        <input type="text" id="loginEmail" placeholder="e.g. alex@gmail.com" class="input-style">
-        <label style="font-size:12px; font-weight:700">PASSWORD</label>
-        <input type="password" placeholder="••••••••" class="input-style">
-        <button class="btn-action" onclick="handleLogin()">Access Dashboard</button>
+    <div class="drawer-blur" id="blur"></div>
+    <div id="loginDrawer">
+        <h1 style="font-size: 32px; margin-bottom: 10px;">Welcome Home</h1>
+        <p style="color: #A4907C; margin-bottom: 40px;">Savor the organic lifestyle.</p>
+        <div class="input-group">
+            <label>EMAIL</label>
+            <input type="text" id="loginEmail" placeholder="yourname@email.com">
+        </div>
+        <button class="btn-action" style="width: 100%" onclick="handleLogin()">Enter Kitchen</button>
     </div>
 
     <aside class="sidebar">
-        <div class="logo">🥗 FreshBite</div>
-        
-        <div class="nav-label">General</div>
-        <div class="nav-group">
-            <button class="nav-btn active" onclick="switchView('library', this)">🏠 Meal Library</button>
-            <button class="nav-btn" onclick="switchView('orders', this)">📦 My Orders</button>
-            <button class="nav-btn" onclick="switchView('billing', this)">💳 Billing</button>
-        </div>
-
-        <div class="nav-label">Preferences</div>
-        <div class="nav-group">
-            <button class="nav-btn" onclick="switchView('profile', this)">👤 User Profile</button>
-            <button class="nav-btn" onclick="switchView('support', this)">🎧 Help Center</button>
-            <button class="nav-btn" id="adminNavBtn" onclick="switchView('admin', this)">🛡️ Admin Panel</button>
-        </div>
+        <div class="logo">🫒 FreshBite</div>
+        <div class="nav-btn active" onclick="nav('library', this)">🏠 Kitchen Menu</div>
+        <div class="nav-btn" onclick="nav('profile', this)">👤 My Profile</div>
+        <div class="nav-btn" onclick="nav('support', this)">🎧 Help Center</div>
+        <div class="nav-btn" onclick="nav('admin', this)">🛡️ Admin Portal</div>
 
         <div class="box-counter">
-            <div style="font-size: 11px; font-weight:700; color: #666; letter-spacing:0.5px">MY BOX</div>
-            <div style="font-size: 22px; font-weight: 800; color: var(--fresh-green);" id="sidebarCount">0 Meals</div>
+            <span style="font-size: 12px; font-weight: 700; opacity: 0.6;">CURRENT BOX</span>
+            <div style="font-size: 24px; font-weight: 800; color: var(--terracotta);" id="countDisplay">0 Meals</div>
         </div>
 
-        <div class="logout-container">
-            <button class="btn-action" style="background:#f44336;" onclick="handleLogout()">Logout Account</button>
-        </div>
+        <button class="btn-action" style="margin-top: auto; background: var(--latte-accent); color: var(--walnut-brown);" onclick="logout()">Sign Out</button>
     </aside>
 
-    <main class="dashboard-main" id="mainContent">
-        <section id="view-library" class="view-section active">
-            <header>
-                <h1 id="mainHeading">Daily Fuel Dashboard</h1>
-                <p>Select your diet type to view our chef's menu.</p>
-            </header>
-            <div class="meal-grid" id="mealGrid"></div>
-        </section>
-
-        <section id="view-orders" class="view-section">
-            <header><h1>Order History</h1><p>Track and manage your past deliveries.</p></header>
-            <div class="data-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><strong>Order #8821</strong><br><small>March 15, 2026</small></div>
-                    <span class="status-pill">DELIVERED</span>
+    <main class="dashboard-main" id="main">
+        <section id="v-library" class="view-section active">
+            <h1>Chef's Menu</h1>
+            <div class="meal-grid">
+                <div class="meal-card" onclick="add()">
+                    <div style="height:200px; background:var(--latte-light)"></div>
+                    <div style="padding:20px;">
+                        <h3>Harvest Grain Bowl</h3>
+                        <p style="font-size: 14px; color: #8D7B68;">Quinoa, roasted sweet potato, and tahini.</p>
+                    </div>
                 </div>
-                <p style="margin-top:15px; font-size:14px;">6x Keto Performance Meals</p>
-            </div>
-        </section>
-
-        <section id="view-billing" class="view-section">
-            <header><h1>Billing & Subscription</h1><p>Manage your payment methods and plans.</p></header>
-            <div class="data-card">
-                <h3>Active Plan: Family Box</h3>
-                <p>12 Meals/Week - Next billing date: <strong>March 28, 2026</strong></p>
-                <button class="btn-action" style="width:auto; padding: 10px 20px;">Update Payment</button>
-            </div>
-        </section>
-
-        <section id="view-profile" class="view-section">
-            <header><h1>User Profile</h1><p>Update your personal information.</p></header>
-            <div class="data-card">
-                <label style="font-size:13px; font-weight:700">FULL NAME</label>
-                <input type="text" class="input-style" value="Alex Johnson">
-                <label style="font-size:13px; font-weight:700">EMAIL ADDRESS</label>
-                <input type="text" id="profileEmail" class="input-style" disabled>
-                <button class="btn-action" onclick="alert('Profile Updated!')">Save Changes</button>
-            </div>
-        </section>
-
-        <section id="view-support" class="view-section">
-            <header><h1>Help Center</h1><p>Have questions? We're here to help.</p></header>
-            <div class="data-card">
-                <h3>Contact Support</h3>
-                <p>Email: support@freshbite.com</p>
-                <p>Phone: 1-800-FRESH-BITE</p>
-                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-                <button class="btn-action" style="width:auto; padding:12px 30px;">Chat with an Agent</button>
-            </div>
-        </section>
-
-        <section id="view-admin" class="view-section">
-            <header>
-                <h1 style="color: var(--admin-purple)">🛡️ Administrative Controls</h1>
-                <p>Internal oversight and platform metrics.</p>
-            </header>
-            <div class="admin-stat-grid">
-                <div class="stat-box">
-                    <small style="color:#888; font-weight:bold">TOTAL REVENUE</small>
-                    <h2 style="margin:5px 0">$12,450.00</h2>
-                    <span style="color:var(--fresh-green); font-size:12px">↑ 14% this month</span>
-                </div>
-                <div class="stat-box">
-                    <small style="color:#888; font-weight:bold">ACTIVE USERS</small>
-                    <h2 style="margin:5px 0">1,284</h2>
-                    <span style="color:var(--fresh-green); font-size:12px">↑ 5% this week</span>
-                </div>
-                <div class="stat-box">
-                    <small style="color:#888; font-weight:bold">PENDING ORDERS</small>
-                    <h2 style="margin:5px 0">42</h2>
-                    <span style="color:var(--deep-orange); font-size:12px">Require Dispatch</span>
+                <div class="meal-card" onclick="add()">
+                    <div style="height:200px; background:var(--latte-accent)"></div>
+                    <div style="padding:20px;">
+                        <h3>Rustic Tomato Soup</h3>
+                        <p style="font-size: 14px; color: #8D7B68;">Vine-ripened tomatoes and basil oil.</p>
+                    </div>
                 </div>
             </div>
-            <div class="data-card" style="margin-top:25px">
-                <h3>Recent System Logs</h3>
-                <ul style="font-size: 13px; line-height: 2; color: #555;">
-                    <li>[14:20] User Alex_J updated billing info.</li>
-                    <li>[13:05] New subscription started: Family Box (ID: #9901).</li>
-                    <li>[09:15] Menu database updated for next week's Keto cycle.</li>
-                </ul>
+        </section>
+
+        <section id="v-profile" class="view-section">
+            <h1>Profile Settings</h1>
+            <div class="card" style="max-width: 500px;">
+                <div class="input-group">
+                    <label>DISPLAY NAME</label>
+                    <input type="text" id="uName" value="Gourmet Guest">
+                </div>
+                <div class="input-group">
+                    <label>DELIVERY ADDRESS</label>
+                    <input type="text" placeholder="123 Orchard Lane">
+                </div>
+                <button class="btn-action" onclick="saveProfile()">Update Identity</button>
+            </div>
+        </section>
+
+        <section id="v-support" class="view-section">
+            <h1>Help Center</h1>
+            <div class="card">
+                <input type="text" placeholder="Search for help (e.g. delivery, price)..." onkeyup="filterFAQ(this.value)">
+                <div id="faqList" style="margin-top: 30px;">
+                    <div class="faq-item" style="padding: 15px 0; border-bottom: 1px solid var(--latte-light);">
+                        <strong>When does my box arrive?</strong>
+                        <p style="font-size: 14px; color: #8D7B68;">We deliver every Tuesday and Friday morning.</p>
+                    </div>
+                    <div class="faq-item" style="padding: 15px 0; border-bottom: 1px solid var(--latte-light);">
+                        <strong>Can I pause my subscription?</strong>
+                        <p style="font-size: 14px; color: #8D7B68;">Yes, under the Billing tab in your account settings.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="v-admin" class="view-section">
+            <h1>Management Terminal</h1>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+                <div class="card">
+                    <h3>Stats</h3>
+                    <p>Orders Today: <strong>142</strong></p>
+                    <p>Revenue: <strong>$4,290</strong></p>
+                    <button class="btn-action" style="width: 100%;" onclick="refreshLogs()">Refresh Logs</button>
+                </div>
+                <div class="card">
+                    <h3>Live System Logs</h3>
+                    <div id="adminLogs" style="font-family: monospace; font-size: 12px; height: 200px; overflow-y: auto; background: var(--cream-bg); padding: 15px; border-radius: 12px;">
+                        [SYSTEM]: Terminal Ready...<br>
+                        [AUTH]: Admin session verified.<br>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <div class="modal" id="orderModal"><div class="modal-content" id="modalTarget"></div></div>
-
     <script>
-        let order = { diet: "", count: 0, address: "" };
-        const mealData = {
-            'veggs': [
-                { name: 'Summer Grilled Vegetables', img: 'summer grilled vegetables.jpg', desc: 'Seasonal mix with balsamic glaze.' },
-                { name: 'Veggie Stir Fry', img: 'veggs stir fry.jpg', desc: 'Ginger-soy tofu and crisp snap peas.' },
-                { name: 'Roasted Root Vegetables', img: 'roasted root vegetables.jpg', desc: 'Thyme-scented carrots and parsnips.' }
-            ],
-            'meat': [
-                { name: 'Classic Steak', img: 'steak.jpg', desc: 'Grass-fed sirloin with garlic butter.' },
-                { name: 'Roasted Chicken', img: 'roasted chicken.jpg', desc: 'Lemon-herb bird with asparagus.' },
-                { name: 'Hearty Chicken Soup', img: 'chicken soup.jpg', desc: 'Old-fashioned comfort in a bowl.' }
-            ],
-            'keto': [
-                { name: 'Keto Chicken', img: 'keto chicken.jpg', desc: 'Cheesy spinach stuffed breast.' },
-                { name: 'Keto Taco Casserole', img: 'keto taco caserole.jpg', desc: 'Zesty beef with avocado crema.' },
-                { name: 'Keto Beef & Broccoli', img: 'keto beef & broccoli.jpg', desc: 'Low-carb favorite with sesame.' }
-            ]
-        };
+        let count = 0;
 
-        window.onload = function() {
-            if (localStorage.getItem("isLoggedIn") === "true") {
-                showDashboard();
-            } else {
-                showLogin();
-            }
-        };
-
-        function showLogin() {
-            document.getElementById('loginDrawer').classList.add('open');
-            document.getElementById('drawerBg').style.display = 'block';
-            document.getElementById('mainContent').classList.add('locked');
+        // NAVIGATION
+        function nav(view, btn) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`v-${view}`).classList.add('active');
+            btn.classList.add('active');
         }
 
-        function showDashboard() {
-            document.getElementById('loginDrawer').classList.remove('open');
-            document.getElementById('drawerBg').style.display = 'none';
-            document.getElementById('mainContent').classList.remove('locked');
-            document.getElementById('profileEmail').value = localStorage.getItem("userEmail") || "user@example.com";
-            startOrderFlow();
+        // INTERACTIVE LOGS
+        function refreshLogs() {
+            const logs = document.getElementById('adminLogs');
+            const time = new Date().toLocaleTimeString();
+            logs.innerHTML += `<span style="color:var(--terracotta)">[${time}] PULLING REVENUE DATA...</span><br>`;
+            logs.innerHTML += `[${time}] SUCCESS: Database synced.<br>`;
+            logs.scrollTop = logs.scrollHeight;
         }
 
+        // FAQ SEARCH
+        function filterFAQ(val) {
+            const items = document.querySelectorAll('.faq-item');
+            items.forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(val.toLowerCase()) ? 'block' : 'none';
+            });
+        }
+
+        // PROFILE
+        function saveProfile() {
+            const name = document.getElementById('uName').value;
+            alert(`Settings saved for ${name}!`);
+        }
+
+        // MEAL ADDER
+        function add() {
+            count++;
+            document.getElementById('countDisplay').innerText = `${count} Meals`;
+            const logs = document.getElementById('adminLogs');
+            logs.innerHTML += `[USER_ACTION]: Meal added to cart.<br>`;
+        }
+
+        // AUTH
         function handleLogin() {
             const email = document.getElementById('loginEmail').value;
-            if (email.includes('@')) {
-                localStorage.setItem("isLoggedIn", "true");
-                localStorage.setItem("userEmail", email);
-                showDashboard();
-            } else { 
-                alert("Please enter a valid email address."); 
+            if(email.includes('@')) {
+                localStorage.setItem('user', email);
+                document.getElementById('loginDrawer').classList.remove('open');
+                document.getElementById('blur').style.display = 'none';
             }
         }
 
-        function handleLogout() { 
-            localStorage.removeItem("isLoggedIn"); 
-            location.reload(); 
-        }
+        function logout() { localStorage.clear(); location.reload(); }
 
-        function switchView(viewId, btn) {
-            // Remove active classes from all buttons
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('active');
-                b.classList.remove('admin-active');
-            });
-
-            // Special styling for Admin button if active
-            if(viewId === 'admin') {
-                btn.classList.add('admin-active');
-            } else {
-                btn.classList.add('active');
+        window.onload = () => {
+            if(!localStorage.getItem('user')) {
+                document.getElementById('loginDrawer').classList.add('open');
+                document.getElementById('blur').style.display = 'block';
             }
-
-            // Switch content sections
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(`view-${viewId}`).classList.add('active');
-            
-            if(viewId === 'library') startOrderFlow();
-        }
-
-        function startOrderFlow() {
-            const grid = document.getElementById('mealGrid');
-            document.getElementById('mainHeading').innerText = "Step 1: Select Your Diet";
-            grid.innerHTML = `
-                <div class="meal-card" onclick="chooseDiet('keto')" style="cursor:pointer">
-                    <img src="keto chicken.jpg" class="meal-img">
-                    <div class="meal-info"><h3>Keto</h3><p>Low-carb performance.</p></div>
-                </div>
-                <div class="meal-card" onclick="chooseDiet('veggs')" style="cursor:pointer">
-                    <img src="summer grilled vegetables.jpg" class="meal-img">
-                    <div class="meal-info"><h3>Vegetarian</h3><p>Plant-based vitality.</p></div>
-                </div>
-                <div class="meal-card" onclick="chooseDiet('meat')" style="cursor:pointer">
-                    <img src="steak.jpg" class="meal-img">
-                    <div class="meal-info"><h3>Meat & Poultry</h3><p>Lean protein energy.</p></div>
-                </div>
-            `;
-        }
-
-        function chooseDiet(type) {
-            order.diet = type;
-            const grid = document.getElementById('mealGrid');
-            document.getElementById('mainHeading').innerText = `Step 2: Choose ${type} Meals`;
-            let html = mealData[type].map(meal => `
-                <div class="meal-card" onclick="addMeal('${meal.name}')" style="cursor:pointer">
-                    <img src="${meal.img}" class="meal-img" onerror="this.src='https://via.placeholder.com/300x200?text=Food'">
-                    <div class="meal-info"><h3>${meal.name}</h3><p>${meal.desc}</p></div>
-                </div>
-            `).join('');
-            html += `<div class="meal-card" onclick="openDelivery()" style="cursor:pointer; border: 2px dashed var(--fresh-green); background:#f9fff9;">
-                        <div class="meal-info" style="text-align:center; padding: 60px 20px;"><h3>CHECKOUT</h3><p>Finish your weekly box.</p></div>
-                    </div>`;
-            grid.innerHTML = html;
-        }
-
-        function addMeal(name) {
-            order.count++;
-            document.getElementById('sidebarCount').innerText = `${order.count} Meals`;
-            alert(`${name} added to your box!`);
-        }
-
-        function openDelivery() {
-            document.getElementById('modalTarget').innerHTML = `
-                <h2>Delivery Details</h2>
-                <input type="text" id="userAddr" placeholder="Street Address" class="input-style">
-                <button class="btn-action" onclick="confirmOrder()">PLACE ORDER</button>
-            `;
-            document.getElementById('orderModal').style.display = 'flex';
-        }
-
-        function confirmOrder() {
-            order.address = document.getElementById('userAddr').value;
-            if(!order.address) return alert("Address required");
-            document.getElementById('modalTarget').innerHTML = `
-                <div style="font-size:40px">🚚</div><h2>Order Success!</h2>
-                <p>Shipping to ${order.address}</p>
-                <button class="btn-action" onclick="closeOrder()">START NEW BOX</button>
-            `;
-        }
-
-        function closeOrder() {
-            document.getElementById('orderModal').style.display = 'none';
-            order.count = 0;
-            document.getElementById('sidebarCount').innerText = `0 Meals`;
-            startOrderFlow();
         }
     </script>
 </body>
