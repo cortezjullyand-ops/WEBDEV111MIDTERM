@@ -104,7 +104,7 @@
 
         .step-content { text-align: center; }
         
-        select, input {
+        select, input, textarea {
             width: 100%; padding: 12px; margin: 15px 0;
             border-radius: 10px; border: 1px solid #ccc;
             font-family: inherit;
@@ -208,9 +208,8 @@
     </div>
 
     <script>
-        let orderData = { cake: "", flavor: "", date: "" };
+        let orderData = { cake: "", flavor: "", date: "", address: "" };
 
-        // Helper to show modal
         function openModal() { document.getElementById('orderModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
         function login() { document.getElementById('authCard').style.display='none'; }
@@ -219,7 +218,6 @@
             const body = document.getElementById('modalBody');
             
             if(type === 'Orders') {
-                // Smooth scroll to the gallery instead of alert
                 document.getElementById('gallery').scrollIntoView();
             } 
             else if(type === 'Design') {
@@ -280,20 +278,37 @@
             body.innerHTML = `
                 <h2>Select Pickup Date</h2>
                 <input type="date" id="pDate" min="${new Date().toISOString().split('T')[0]}">
+                <button class="action-btn" onclick="stepAddress()">Next: Address</button>
+            `;
+        }
+
+        // NEW STEP: ADDRESS INPUT
+        function stepAddress() {
+            orderData.date = document.getElementById('pDate').value;
+            if(!orderData.date) return alert("Please select a date.");
+            
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `
+                <h2>Delivery/Pickup Address</h2>
+                <textarea id="pAddress" placeholder="Enter full address for delivery or 'Store Pickup'" rows="3"></textarea>
                 <button class="action-btn" onclick="stepConfirm()">Next: Confirm</button>
             `;
         }
 
         function stepConfirm() {
-            orderData.date = document.getElementById('pDate').value;
-            if(!orderData.date) return alert("Please select a date.");
+            orderData.address = document.getElementById('pAddress').value;
+            if(!orderData.address) return alert("Please enter an address or 'Store Pickup'.");
+
             const body = document.getElementById('modalBody');
             body.innerHTML = `
                 <h2 style="color: var(--velvet-maroon)">Confirm Order</h2>
-                <p><strong>Cake:</strong> ${orderData.cake}</p>
-                <p><strong>Flavor:</strong> ${orderData.flavor}</p>
-                <p><strong>Date:</strong> ${orderData.date}</p>
-                <button class="action-btn" onclick="complete()">Confirm Pickup</button>
+                <div style="text-align: left; background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 15px;">
+                    <p><strong>Cake:</strong> ${orderData.cake}</p>
+                    <p><strong>Flavor:</strong> ${orderData.flavor}</p>
+                    <p><strong>Date:</strong> ${orderData.date}</p>
+                    <p><strong>Address:</strong> ${orderData.address}</p>
+                </div>
+                <button class="action-btn" onclick="complete()">Confirm Order</button>
             `;
         }
 
