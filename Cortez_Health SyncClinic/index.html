@@ -17,8 +17,11 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* Added smooth transition for background color */
             background-color: #f4f7f9;
+            transition: background-color 0.8s ease;
             color: var(--text-dark);
+            min-height: 100vh;
         }
 
         nav {
@@ -127,7 +130,7 @@
             background: var(--white);
             padding: 50px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             position: relative;
             min-height: 400px;
         }
@@ -159,7 +162,7 @@
             border: 2px solid #f0f0f0;
             border-radius: 10px;
             text-align: left;
-            background: none;
+            background: white;
             cursor: pointer;
             font-size: 18px;
             font-weight: 500;
@@ -240,8 +243,21 @@
     <script>
         let booking = { specialty: "", doctor: "", time: "" };
 
+        // Color palette for the background transition
+        const stepColors = {
+            step1: "#f4f7f9", // Very Light Blue/Grey
+            step2: "#e0f2ff", // Light Sky Blue
+            step3: "#d1e9ff", // Soft Periwinkle
+            step4: "#c2e0ff"  // Cool Arctic Blue
+        };
+
+        function changeBg(color) {
+            document.body.style.backgroundColor = color;
+        }
+
         // INITIALIZE STEP 1
         function startWizard() {
+            changeBg(stepColors.step1);
             updateProgress(25);
             document.getElementById('stepContent').innerHTML = `
                 <h1 class="step-title">Select Specialty</h1>
@@ -255,6 +271,7 @@
 
         function setSpecialty(val) {
             booking.specialty = val;
+            changeBg(stepColors.step2);
             updateProgress(50);
             document.getElementById('stepContent').innerHTML = `
                 <h1 class="step-title">Pick a Doctor</h1>
@@ -267,6 +284,7 @@
 
         function setDoctor(val) {
             booking.doctor = val;
+            changeBg(stepColors.step3);
             updateProgress(75);
             document.getElementById('stepContent').innerHTML = `
                 <h1 class="step-title">Choose Time</h1>
@@ -279,6 +297,7 @@
 
         function setTime(val) {
             booking.time = val;
+            changeBg(stepColors.step4);
             updateProgress(100);
             document.getElementById('stepContent').innerHTML = `
                 <h1 class="step-title" style="color:var(--success-green)">Confirm Appointment</h1>
