@@ -135,11 +135,11 @@
             text-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
+        /* UPDATED LAYOUT: Column flow for separate boxes */
         .main-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: stretch;
+            flex-direction: column; /* Stacked vertically */
+            align-items: center;
             gap: 30px;
             padding: 20px;
             max-width: 1100px;
@@ -155,11 +155,10 @@
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             overflow: hidden;
+            width: 100%; /* Take full width of container */
         }
 
         .slideshow-box {
-            flex: 1.5;
-            min-width: 350px;
             position: relative;
         }
 
@@ -171,19 +170,13 @@
             display: block;
         }
 
-        .booking-box {
-            flex: 1;
-            min-width: 320px;
+        /* Individual selection containers */
+        .selection-box {
             padding: 40px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
-        .booking-box h2 { margin-top: 0; font-size: 1.6rem; letter-spacing: 1px; }
-        .step { display: none; animation: fadeEffect 0.6s; }
-        .step.active { display: block; }
+        .selection-box h2 { margin-top: 0; font-size: 1.6rem; letter-spacing: 1px; color: var(--accent-cyan); border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 25px;}
 
         label {
             display: block;
@@ -209,6 +202,7 @@
 
         .btn-action {
             width: 100%;
+            max-width: 300px;
             padding: 16px;
             border: none;
             border-radius: 10px;
@@ -218,6 +212,7 @@
             font-size: 1rem;
             cursor: pointer;
             text-transform: uppercase;
+            margin-top: 10px;
         }
 
         .btn-action:hover {
@@ -227,21 +222,23 @@
 
         .amenity-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
         }
         .amenity-item {
             background: rgba(255,255,255,0.1);
-            padding: 10px;
+            padding: 15px;
             border-radius: 8px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             cursor: pointer;
+            border: 1px solid transparent;
         }
         .amenity-item.selected {
             background: var(--accent-cyan);
             color: #000;
             font-weight: bold;
+            border: 1px solid white;
         }
 
         .dot-container {
@@ -262,8 +259,8 @@
         @keyframes fadeEffect { from { opacity: 0.4; } to { opacity: 1; } }
 
         @media (max-width: 850px) {
-            .main-container { flex-direction: column; }
             nav { padding: 20px; }
+            .selection-box { padding: 25px; }
         }
     </style>
 </head>
@@ -283,16 +280,16 @@
         <h2 style="color: var(--accent-cyan); letter-spacing: 2px;">YOUR ITINERARY</h2>
         <div class="itinerary-details" id="itineraryDisplay">
             </div>
-        <button class="btn-action" onclick="toggleItinerary()" style="margin-top: 20px;">Close View</button>
+        <button class="btn-action" onclick="toggleItinerary()" style="margin-top: 20px; width: 100%; max-width: none;">Close View</button>
     </div>
 </div>
 
 <nav>
     <div class="logo">Luna Vista</div>
     <div class="nav-links">
-        <button onclick="goToStep(1)">Dates</button>
-        <button onclick="goToStep(2)">Rooms</button>
-        <button onclick="goToStep(3)">Booking</button>
+        <button onclick="document.getElementById('date-section').scrollIntoView({behavior: 'smooth'})">Dates</button>
+        <button onclick="document.getElementById('room-section').scrollIntoView({behavior: 'smooth'})">Rooms</button>
+        <button onclick="document.getElementById('amenity-section').scrollIntoView({behavior: 'smooth'})">Amenities</button>
         <button class="itinerary-btn" onclick="toggleItinerary()">Itinerary</button>
     </div>
 </nav>
@@ -324,37 +321,37 @@
         </div>
     </section>
 
-    <section class="booking-box glass-panel">
-        <div class="step active" id="step1">
-            <h2>STAY DATES</h2>
+    <section class="glass-panel selection-box" id="date-section">
+        <h2>1. SELECT STAY DATES</h2>
+        <div style="max-width: 600px; margin: 0 auto;">
             <label>Check-In</label>
             <input type="date" id="checkin">
             <label>Check-Out</label>
             <input type="date" id="checkout">
-            <button class="btn-action" onclick="nextStep()">Filter Rooms</button>
         </div>
+    </section>
 
-        <div class="step" id="step2">
-            <h2>CHOOSE ROOM</h2>
+    <section class="glass-panel selection-box" id="room-section">
+        <h2>2. CHOOSE YOUR SUITE</h2>
+        <div style="max-width: 600px; margin: 0 auto;">
             <label>Category</label>
             <select id="roomCategory">
                 <option>Deluxe Ocean Suite</option>
                 <option>Azure Penthouse</option>
                 <option>Family Vista Villa</option>
             </select>
-            <button class="btn-action" onclick="nextStep()">Add Amenities</button>
         </div>
+    </section>
 
-        <div class="step" id="step3">
-            <h2>AMENITIES</h2>
-            <div class="amenity-grid">
-                <div class="amenity-item" onclick="toggleAmenity(this)">Spa Access</div>
-                <div class="amenity-item" onclick="toggleAmenity(this)">Airport Transfer</div>
-                <div class="amenity-item" onclick="toggleAmenity(this)">Early Check-in</div>
-                <div class="amenity-item" onclick="toggleAmenity(this)">Breakfast Buffet</div>
-            </div>
-            <button class="btn-action" onclick="finishFlow()">Check-In Now</button>
+    <section class="glass-panel selection-box" id="amenity-section">
+        <h2>3. ENHANCE YOUR STAY</h2>
+        <div class="amenity-grid">
+            <div class="amenity-item" onclick="toggleAmenity(this)">Spa Access</div>
+            <div class="amenity-item" onclick="toggleAmenity(this)">Airport Transfer</div>
+            <div class="amenity-item" onclick="toggleAmenity(this)">Early Check-in</div>
+            <div class="amenity-item" onclick="toggleAmenity(this)">Breakfast Buffet</div>
         </div>
+        <button class="btn-action" onclick="finishFlow()">Confirm & Check-In</button>
     </section>
 </main>
 
@@ -388,7 +385,6 @@
         setTimeout(showSlides, 4000); 
     }
 
-    // ITINERARY FUNCTIONS
     function toggleAmenity(element) {
         element.classList.toggle('selected');
         const amenityName = element.innerText;
@@ -403,7 +399,6 @@
         const modal = document.getElementById('itineraryModal');
         const display = document.getElementById('itineraryDisplay');
         
-        // Grab current data
         const cin = document.getElementById('checkin').value || "Not selected";
         const cout = document.getElementById('checkout').value || "Not selected";
         const room = document.getElementById('roomCategory').value;
@@ -419,19 +414,9 @@
         modal.style.display = (modal.style.display === "flex") ? "none" : "flex";
     }
 
-    let currentStep = 1;
-    function goToStep(num) {
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + num).classList.add('active');
-        currentStep = num;
-    }
-
-    function nextStep() {
-        if (currentStep < 3) goToStep(currentStep + 1);
-    }
-
     function finishFlow() {
-        alert("Check-in Successful! You can view your selections in the Itinerary.");
+        alert("Check-in Successful! You can view your final summary in the Itinerary.");
+        toggleItinerary();
     }
 
     document.getElementById('checkin').valueAsDate = new Date();
