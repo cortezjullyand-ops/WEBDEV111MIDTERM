@@ -11,276 +11,226 @@
             --latte-accent: #E8DCC4;
             --walnut-brown: #5D4037;
             --terracotta: #D35400;
-            --sage-muted: #8E9775;
             --white: #ffffff;
-            --sidebar-width: 280px;
-            --shadow: 0 10px 30px rgba(93, 64, 55, 0.08);
+            --sidebar-width: 260px;
         }
 
         body {
-            margin: 0;
-            font-family: 'Outfit', 'Segoe UI', sans-serif;
-            background-color: var(--cream-bg);
-            color: var(--walnut-brown);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* --- SMOOTH ANIMATIONS --- */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            margin: 0; font-family: 'Segoe UI', sans-serif;
+            background-color: var(--cream-bg); color: var(--walnut-brown);
+            display: flex; min-height: 100vh;
         }
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: var(--sidebar-width);
-            background: var(--white);
+            width: var(--sidebar-width); background: var(--white);
             border-right: 1px solid var(--latte-accent);
-            display: flex;
-            flex-direction: column;
-            padding: 40px 25px;
-            position: fixed;
-            height: 100vh;
-            box-sizing: border-box;
-            z-index: 100;
+            display: flex; flex-direction: column; padding: 30px 20px;
+            position: fixed; height: 100vh; box-sizing: border-box; z-index: 100;
         }
 
-        .logo { 
-            font-size: 24px; font-weight: 800; color: var(--walnut-brown); 
-            margin-bottom: 40px; display: flex; align-items: center; gap: 10px;
-        }
-
+        .logo { font-size: 26px; font-weight: 800; margin-bottom: 40px; color: var(--walnut-brown); }
+        
         .nav-btn {
-            background: none; border: none; padding: 14px 18px; text-align: left;
-            font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 12px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #8D7B68;
-            display: flex; align-items: center; gap: 12px; margin-bottom: 5px;
+            background: none; border: none; padding: 12px 15px; text-align: left;
+            font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 10px;
+            transition: 0.3s; color: #8D7B68; display: flex; align-items: center; gap: 10px;
         }
 
-        .nav-btn:hover { background: var(--latte-light); color: var(--walnut-brown); }
-        .nav-btn.active { background: var(--walnut-brown); color: var(--cream-bg); box-shadow: 0 4px 12px rgba(93, 64, 55, 0.2); }
+        .nav-btn:hover { background: var(--latte-light); }
+        .nav-btn.active { background: var(--walnut-brown); color: white; }
 
         .box-counter {
-            background: var(--latte-light); padding: 20px; border-radius: 15px;
-            margin-top: 30px; text-align: center; border: 1px solid var(--latte-accent);
+            background: var(--latte-light); padding: 15px; border-radius: 12px;
+            margin-top: 20px; text-align: center; border: 1px solid var(--latte-accent);
         }
 
-        /* --- MAIN CONTENT --- */
-        .dashboard-main {
-            margin-left: var(--sidebar-width);
-            flex: 1; padding: 60px 80px;
-        }
+        /* --- MAIN --- */
+        .dashboard-main { margin-left: var(--sidebar-width); flex: 1; padding: 50px 80px; }
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: slideUp 0.5s ease forwards; }
-
-        /* --- CARDS & UI --- */
-        .card { 
-            background: var(--white); border-radius: 24px; padding: 35px; 
-            box-shadow: var(--shadow); border: 1px solid rgba(232, 220, 196, 0.4);
-            margin-bottom: 30px;
-        }
-
-        .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .meal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
         .meal-card { 
-            background: var(--white); border-radius: 20px; overflow: hidden; 
-            transition: 0.4s; border: 1px solid var(--latte-accent);
+            background: var(--white); border-radius: 18px; overflow: hidden; 
+            border: 1px solid var(--latte-accent); transition: 0.3s; cursor: pointer;
         }
-        .meal-card:hover { transform: scale(1.03); box-shadow: var(--shadow); border-color: var(--terracotta); }
+        .meal-card:hover { transform: translateY(-5px); border-color: var(--terracotta); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .meal-img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
+        .meal-info { padding: 20px; }
 
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 8px; color: #A4907C; }
+        .data-card { background: var(--white); padding: 30px; border-radius: 20px; border: 1px solid var(--latte-accent); margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0 20px 0; border: 1px solid var(--latte-accent); border-radius: 10px; box-sizing: border-box; }
         
-        input { 
-            width: 100%; padding: 14px; background: var(--cream-bg); 
-            border: 1px solid var(--latte-accent); border-radius: 12px; 
-            font-family: inherit; font-size: 15px; color: var(--walnut-brown);
-        }
+        .btn-action { width: 100%; padding: 15px; background: var(--walnut-brown); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { background: var(--terracotta); }
 
-        .btn-action { 
-            padding: 14px 28px; background: var(--walnut-brown); color: white; 
-            border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-action:hover { background: var(--terracotta); transform: translateY(-2px); }
-
-        /* --- LOGIN DRAWER --- */
-        #loginDrawer {
-            position: fixed; top: 0; right: -500px; width: 450px; height: 100%;
-            background: var(--white); z-index: 2001; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 100px 60px; box-shadow: -10px 0 50px rgba(0,0,0,0.1);
-        }
+        .drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; backdrop-filter: blur(5px); display: none; }
+        #loginDrawer { position: fixed; top: 0; right: -450px; width: 400px; height: 100%; background: var(--white); z-index: 2001; transition: 0.5s; padding: 80px 50px; box-sizing: border-box; }
         #loginDrawer.open { right: 0; }
-        .drawer-blur { position: fixed; inset: 0; background: rgba(93, 64, 55, 0.2); backdrop-filter: blur(8px); display: none; z-index: 2000; }
     </style>
 </head>
 <body>
 
-    <div class="drawer-blur" id="blur"></div>
+    <div class="drawer-bg" id="drawerBg"></div>
     <div id="loginDrawer">
-        <h1 style="font-size: 32px; margin-bottom: 10px;">Welcome Home</h1>
-        <p style="color: #A4907C; margin-bottom: 40px;">Savor the organic lifestyle.</p>
-        <div class="input-group">
-            <label>EMAIL</label>
-            <input type="text" id="loginEmail" placeholder="yourname@email.com">
-        </div>
-        <button class="btn-action" style="width: 100%" onclick="handleLogin()">Enter Kitchen</button>
+        <h2>Welcome Back</h2>
+        <input type="text" id="loginEmail" placeholder="Email Address">
+        <button class="btn-action" onclick="handleLogin()">Access Dashboard</button>
     </div>
 
     <aside class="sidebar">
-        <div class="logo">🫒 FreshBite</div>
-        <div class="nav-btn active" onclick="nav('library', this)">🏠 Kitchen Menu</div>
-        <div class="nav-btn" onclick="nav('profile', this)">👤 My Profile</div>
-        <div class="nav-btn" onclick="nav('support', this)">🎧 Help Center</div>
-        <div class="nav-btn" onclick="nav('admin', this)">🛡️ Admin Portal</div>
+        <div class="logo">🥗 FreshBite</div>
+        <div class="nav-btn active" onclick="switchView('library', this)">🏠 Meal Library</div>
+        <button class="nav-btn" onclick="switchView('profile', this)">👤 User Profile</button>
+        <button class="nav-btn" onclick="switchView('support', this)">🎧 Help Center</button>
+        <button class="nav-btn" onclick="switchView('admin', this)">🛡️ Admin Panel</button>
 
         <div class="box-counter">
-            <span style="font-size: 12px; font-weight: 700; opacity: 0.6;">CURRENT BOX</span>
-            <div style="font-size: 24px; font-weight: 800; color: var(--terracotta);" id="countDisplay">0 Meals</div>
+            <div style="font-size: 11px; font-weight:700; opacity: 0.6">MY BOX</div>
+            <div style="font-size: 22px; font-weight: 800; color: var(--terracotta);" id="sidebarCount">0 Meals</div>
         </div>
 
-        <button class="btn-action" style="margin-top: auto; background: var(--latte-accent); color: var(--walnut-brown);" onclick="logout()">Sign Out</button>
+        <button class="btn-action" style="margin-top: auto; background: #eee; color: #333;" onclick="handleLogout()">Logout</button>
     </aside>
 
-    <main class="dashboard-main" id="main">
-        <section id="v-library" class="view-section active">
-            <h1>Chef's Menu</h1>
-            <div class="meal-grid">
-                <div class="meal-card" onclick="add()">
-                    <div style="height:200px; background:var(--latte-light)"></div>
-                    <div style="padding:20px;">
-                        <h3>Harvest Grain Bowl</h3>
-                        <p style="font-size: 14px; color: #8D7B68;">Quinoa, roasted sweet potato, and tahini.</p>
-                    </div>
-                </div>
-                <div class="meal-card" onclick="add()">
-                    <div style="height:200px; background:var(--latte-accent)"></div>
-                    <div style="padding:20px;">
-                        <h3>Rustic Tomato Soup</h3>
-                        <p style="font-size: 14px; color: #8D7B68;">Vine-ripened tomatoes and basil oil.</p>
-                    </div>
-                </div>
-            </div>
+    <main class="dashboard-main" id="mainContent">
+        <section id="view-library" class="view-section active">
+            <h1 id="mainHeading">Daily Fuel Dashboard</h1>
+            <div class="meal-grid" id="mealGrid"></div>
         </section>
 
-        <section id="v-profile" class="view-section">
-            <h1>Profile Settings</h1>
-            <div class="card" style="max-width: 500px;">
-                <div class="input-group">
-                    <label>DISPLAY NAME</label>
-                    <input type="text" id="uName" value="Gourmet Guest">
-                </div>
-                <div class="input-group">
-                    <label>DELIVERY ADDRESS</label>
-                    <input type="text" placeholder="123 Orchard Lane">
-                </div>
+        <section id="view-profile" class="view-section">
+            <h1>User Profile</h1>
+            <div class="data-card" style="max-width: 500px;">
+                <label><b>FULL NAME</b></label>
+                <input type="text" id="userNameInput" value="Alex Johnson">
+                <label><b>EMAIL ADDRESS</b></label>
+                <input type="text" id="profileEmail" disabled>
                 <button class="btn-action" onclick="saveProfile()">Update Identity</button>
             </div>
         </section>
 
-        <section id="v-support" class="view-section">
+        <section id="view-support" class="view-section">
             <h1>Help Center</h1>
-            <div class="card">
-                <input type="text" placeholder="Search for help (e.g. delivery, price)..." onkeyup="filterFAQ(this.value)">
-                <div id="faqList" style="margin-top: 30px;">
-                    <div class="faq-item" style="padding: 15px 0; border-bottom: 1px solid var(--latte-light);">
-                        <strong>When does my box arrive?</strong>
-                        <p style="font-size: 14px; color: #8D7B68;">We deliver every Tuesday and Friday morning.</p>
+            <div class="data-card">
+                <input type="text" id="helpSearch" placeholder="Search FAQ (e.g., 'delivery')..." onkeyup="searchHelp()">
+                <div id="faqContainer">
+                    <div class="faq-item" style="padding:15px 0; border-bottom:1px solid #eee;">
+                        <b>When is delivery?</b><p>We dispatch every Monday and Thursday.</p>
                     </div>
-                    <div class="faq-item" style="padding: 15px 0; border-bottom: 1px solid var(--latte-light);">
-                        <strong>Can I pause my subscription?</strong>
-                        <p style="font-size: 14px; color: #8D7B68;">Yes, under the Billing tab in your account settings.</p>
+                    <div class="faq-item" style="padding:15px 0; border-bottom:1px solid #eee;">
+                        <b>Can I skip a week?</b><p>Yes, use the Billing tab to pause your subscription.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="v-admin" class="view-section">
-            <h1>Management Terminal</h1>
-            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
-                <div class="card">
-                    <h3>Stats</h3>
-                    <p>Orders Today: <strong>142</strong></p>
-                    <p>Revenue: <strong>$4,290</strong></p>
-                    <button class="btn-action" style="width: 100%;" onclick="refreshLogs()">Refresh Logs</button>
+        <section id="view-admin" class="view-section">
+            <h1>🛡️ Admin Panel</h1>
+            <div class="data-card">
+                <h3>Live System Logs</h3>
+                <div id="adminLogs" style="background:#f9f9f9; padding:15px; border-radius:10px; height:200px; overflow-y:auto; font-family:monospace; font-size:12px;">
+                    [SYSTEM]: Terminal initialized...<br>
                 </div>
-                <div class="card">
-                    <h3>Live System Logs</h3>
-                    <div id="adminLogs" style="font-family: monospace; font-size: 12px; height: 200px; overflow-y: auto; background: var(--cream-bg); padding: 15px; border-radius: 12px;">
-                        [SYSTEM]: Terminal Ready...<br>
-                        [AUTH]: Admin session verified.<br>
-                    </div>
-                </div>
+                <button class="btn-action" style="width:auto; margin-top:10px; padding:10px 20px;" onclick="clearLogs()">Clear Logs</button>
             </div>
         </section>
     </main>
 
     <script>
-        let count = 0;
+        let order = { count: 0 };
+        const mealData = {
+            'veggs': [
+                { name: 'Summer Grilled Vegetables', img: 'summer grilled vegetables.jpg', desc: 'Seasonal mix.' },
+                { name: 'Veggie Stir Fry', img: 'veggs stir fry.jpg', desc: 'Ginger-soy tofu.' }
+            ],
+            'meat': [
+                { name: 'Classic Steak', img: 'steak.jpg', desc: 'Grass-fed sirloin.' },
+                { name: 'Roasted Chicken', img: 'roasted chicken.jpg', desc: 'Lemon-herb bird.' }
+            ],
+            'keto': [
+                { name: 'Keto Chicken', img: 'keto chicken.jpg', desc: 'Cheesy spinach stuffed.' },
+                { name: 'Keto Taco Casserole', img: 'keto taco caserole.jpg', desc: 'Zesty beef.' }
+            ]
+        };
 
-        // NAVIGATION
-        function nav(view, btn) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+        window.onload = function() {
+            if (localStorage.getItem("isLoggedIn")) {
+                document.getElementById('profileEmail').value = localStorage.getItem("userEmail");
+                startOrderFlow();
+            } else {
+                document.getElementById('loginDrawer').classList.add('open');
+                document.getElementById('drawerBg').style.display = 'block';
+            }
+        };
+
+        function switchView(id, btn) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`v-${view}`).classList.add('active');
+            document.getElementById(`view-${id}`).classList.add('active');
             btn.classList.add('active');
+            logAdmin(`Switched to ${id} view`);
         }
 
-        // INTERACTIVE LOGS
-        function refreshLogs() {
-            const logs = document.getElementById('adminLogs');
-            const time = new Date().toLocaleTimeString();
-            logs.innerHTML += `<span style="color:var(--terracotta)">[${time}] PULLING REVENUE DATA...</span><br>`;
-            logs.innerHTML += `[${time}] SUCCESS: Database synced.<br>`;
-            logs.scrollTop = logs.scrollHeight;
+        function startOrderFlow() {
+            const grid = document.getElementById('mealGrid');
+            document.getElementById('mainHeading').innerText = "Select Your Diet Type";
+            grid.innerHTML = `
+                <div class="meal-card" onclick="chooseDiet('keto')"><img src="keto chicken.jpg" class="meal-img"><div class="meal-info"><h3>Keto</h3></div></div>
+                <div class="meal-card" onclick="chooseDiet('veggs')"><img src="summer grilled vegetables.jpg" class="meal-img"><div class="meal-info"><h3>Vegetarian</h3></div></div>
+                <div class="meal-card" onclick="chooseDiet('meat')"><img src="steak.jpg" class="meal-img"><div class="meal-info"><h3>Meat</h3></div></div>
+            `;
         }
 
-        // FAQ SEARCH
-        function filterFAQ(val) {
-            const items = document.querySelectorAll('.faq-item');
-            items.forEach(item => {
-                item.style.display = item.innerText.toLowerCase().includes(val.toLowerCase()) ? 'block' : 'none';
+        function chooseDiet(type) {
+            const grid = document.getElementById('mealGrid');
+            document.getElementById('mainHeading').innerText = `Adding ${type} Meals`;
+            grid.innerHTML = mealData[type].map(m => `
+                <div class="meal-card" onclick="addMeal('${m.name}')">
+                    <img src="${m.img}" class="meal-img" onerror="this.src='https://via.placeholder.com/300x200'">
+                    <div class="meal-info"><h3>${m.name}</h3><p>${m.desc}</p></div>
+                </div>
+            `).join('') + `<button class="btn-action" onclick="startOrderFlow()">Back</button>`;
+        }
+
+        function addMeal(name) {
+            order.count++;
+            document.getElementById('sidebarCount').innerText = `${order.count} Meals`;
+            logAdmin(`User added meal: ${name}`);
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('userNameInput').value;
+            logAdmin(`Profile updated: ${name}`);
+            alert("Profile Saved!");
+        }
+
+        function searchHelp() {
+            const term = document.getElementById('helpSearch').value.toLowerCase();
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(term) ? 'block' : 'none';
             });
         }
 
-        // PROFILE
-        function saveProfile() {
-            const name = document.getElementById('uName').value;
-            alert(`Settings saved for ${name}!`);
-        }
-
-        // MEAL ADDER
-        function add() {
-            count++;
-            document.getElementById('countDisplay').innerText = `${count} Meals`;
+        function logAdmin(msg) {
             const logs = document.getElementById('adminLogs');
-            logs.innerHTML += `[USER_ACTION]: Meal added to cart.<br>`;
+            logs.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
+            logs.scrollTop = logs.scrollHeight;
         }
 
-        // AUTH
+        function clearLogs() { document.getElementById('adminLogs').innerHTML = "[SYSTEM]: Logs cleared.<br>"; }
+
         function handleLogin() {
             const email = document.getElementById('loginEmail').value;
             if(email.includes('@')) {
-                localStorage.setItem('user', email);
-                document.getElementById('loginDrawer').classList.remove('open');
-                document.getElementById('blur').style.display = 'none';
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("userEmail", email);
+                location.reload();
             }
         }
-
-        function logout() { localStorage.clear(); location.reload(); }
-
-        window.onload = () => {
-            if(!localStorage.getItem('user')) {
-                document.getElementById('loginDrawer').classList.add('open');
-                document.getElementById('blur').style.display = 'block';
-            }
-        }
+        function handleLogout() { localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
