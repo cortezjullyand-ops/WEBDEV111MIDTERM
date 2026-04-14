@@ -3,228 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LedgerFlow</title>
+    <title>LedgerFlow Pro</title>
     <style>
         :root {
-            --ledger-blue: #0A2540;
-            --accent-blue: #635BFF;
-            --border-gray: #E6E9EB;
-            --bg-light: #F6F9FC;
-            --text-main: #424770;
-            --white: #ffffff;
-            --success-bg: #D1FADF;
-            --success-text: #027A48;
-            --row-hover: #F9FAFB;
+            --bg-dark: #0f172a;
+            --sidebar-dark: #1e293b;
+            --card-dark: #334155;
+            --accent-blue: #38bdf8;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-slate: #475569;
+            --success: #22c55e;
+            --danger: #ef4444;
         }
 
         body {
-            margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-light); color: var(--text-main);
+            margin: 0; font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-dark); color: var(--text-main);
             display: flex; height: 100vh; overflow: hidden;
         }
 
-        /* --- AUTH & MODAL OVERLAYS --- */
-        #authOverlay, .modal-overlay {
-            position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
+        /* --- UI UTILITIES --- */
+        .hidden { display: none !important; }
+        .btn-primary {
+            background: var(--accent-blue); color: var(--bg-dark); border: none;
+            padding: 10px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;
+            transition: 0.2s;
         }
-        .modal-overlay { background: rgba(10, 37, 64, 0.4); z-index: 10000; display: none; }
-        .modal-card { 
-            background: white; padding: 32px; border-radius: 12px; width: 400px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        input, select, textarea {
+            background: var(--sidebar-dark); border: 1px solid var(--border-slate);
+            color: white; padding: 12px; border-radius: 6px; margin: 8px 0 16px 0; width: 100%;
+            box-sizing: border-box;
         }
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 250px; background: var(--white); border-right: 1px solid var(--border-gray);
-            display: flex; flex-direction: column; padding: 24px; box-sizing: border-box;
+            width: 260px; background: var(--sidebar-dark); border-right: 1px solid var(--border-slate);
+            display: flex; flex-direction: column; padding: 24px;
         }
-        .brand { font-size: 20px; font-weight: 800; color: var(--ledger-blue); margin-bottom: 32px; display: flex; align-items: center; gap: 8px;}
-        .nav-label { font-size: 10px; font-weight: 700; color: #8898AA; text-transform: uppercase; margin: 20px 0 8px 8px; letter-spacing: 0.8px; }
+        .brand { font-size: 22px; font-weight: 800; color: var(--accent-blue); margin-bottom: 40px; }
         .nav-item {
-            padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 14px;
-            display: flex; align-items: center; gap: 10px; transition: 0.2s; color: var(--text-main);
+            padding: 12px; border-radius: 8px; cursor: pointer; color: var(--text-muted);
+            display: flex; align-items: center; gap: 12px; margin-bottom: 4px; transition: 0.2s;
         }
-        .nav-item:hover { background: var(--bg-light); color: var(--accent-blue); }
-        .nav-item.active { background: #F0F4F8; color: var(--accent-blue); font-weight: 600; }
+        .nav-item:hover, .nav-item.active { background: var(--card-dark); color: white; }
 
-        /* --- MAIN VIEW --- */
-        .main-view { flex: 1; padding: 48px 60px; overflow-y: auto; }
+        /* --- MAIN CONTENT --- */
+        .main-view { flex: 1; padding: 40px 60px; overflow-y: auto; }
         .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.25s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- SPREADSHEET TABLE --- */
-        .table-container {
-            background: var(--white); border: 1px solid var(--border-gray);
-            border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-        }
-        .spreadsheet-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .spreadsheet-table th {
-            background: #F8FAFC; padding: 12px 16px; border-bottom: 1px solid var(--border-gray);
-            font-size: 11px; font-weight: 600; color: #697386; text-transform: uppercase;
-        }
-        .spreadsheet-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-gray); font-size: 14px; }
-        .spreadsheet-table tr:hover td { background-color: var(--row-hover); }
-
-        /* --- UI COMPONENTS --- */
-        .pill { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; }
-        .pill-active { background: var(--success-bg); color: var(--success-text); }
-        .pill-pending { background: #FEF3C7; color: #92400E; }
-
-        .btn-primary {
-            background: var(--ledger-blue); color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%;
-        }
-        .btn-secondary { background: #eee; color: #333; margin-top: 8px; }
-        .btn-action {
-            padding: 6px 12px; border: 1px solid var(--border-gray); border-radius: 4px;
-            background: var(--white); font-size: 12px; font-weight: 600; cursor: pointer;
-        }
+        .grid-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+        .card { background: var(--sidebar-dark); padding: 24px; border-radius: 12px; border: 1px solid var(--border-slate); }
         
-        input {
-            width: 100%; padding: 10px; margin: 8px 0 16px 0; border: 1px solid var(--border-gray);
-            border-radius: 6px; box-sizing: border-box; outline: none;
-        }
-        input:focus { border-color: var(--accent-blue); }
+        /* --- TABLES --- */
+        .table-wrap { background: var(--sidebar-dark); border-radius: 12px; border: 1px solid var(--border-slate); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: rgba(255,255,255,0.05); padding: 16px; font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+        td { padding: 16px; border-top: 1px solid var(--border-slate); font-size: 14px; }
+        tr:hover { background: rgba(255,255,255,0.02); }
 
-        .card-flat { background: white; border: 1px solid var(--border-gray); border-radius: 8px; padding: 24px; }
-        .hidden { display: none !important; }
+        .pill { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .pill-paid { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+
+        /* --- MODALS --- */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal { background: var(--bg-dark); border: 1px solid var(--border-slate); padding: 32px; border-radius: 16px; width: 450px; }
     </style>
 </head>
 <body>
 
-    <div id="authOverlay">
-        <div style="width: 320px; text-align: center;">
-            <div style="font-size: 32px; margin-bottom: 16px;">📊</div>
-            <h2 style="color: var(--ledger-blue);">Secure Access</h2>
-            <input type="email" id="emailInput" placeholder="name@company.com">
-            <button class="btn-primary" onclick="finishLogin()">Login</button>
+    <div id="authOverlay" class="overlay" style="display: flex; background: var(--bg-dark);">
+        <div class="modal" style="text-align: center;">
+            <h1 style="color: var(--accent-blue)">LedgerFlow</h1>
+            <p>Professional Financial Orchestration</p>
+            <input type="email" id="loginEmail" placeholder="Corporate Email">
+            <button class="btn-primary" style="width: 100%" onclick="handleAuth()">Access Terminal</button>
         </div>
     </div>
 
-    <div id="invoiceModal" class="modal-overlay">
-        <div class="modal-card">
-            <h3 style="margin-top:0">Create New Invoice</h3>
-            <label><small>CLIENT NAME</small></label>
-            <input type="text" id="invClient" placeholder="e.g. Stark Industries">
-            <label><small>AMOUNT ($)</small></label>
-            <input type="number" id="invAmount" placeholder="0.00">
-            <button class="btn-primary" onclick="addInvoice()">Create Invoice</button>
-            <button class="btn-primary btn-secondary" onclick="toggleModal(false)">Cancel</button>
+    <div id="invoiceModal" class="overlay">
+        <div class="modal">
+            <h3>Draft New Invoice</h3>
+            <label>CLIENT</label>
+            <input type="text" id="invClient" placeholder="Recipient Entity">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div><label>AMOUNT ($)</label><input type="number" id="invAmount"></div>
+                <div><label>DUE DATE</label><input type="date" id="invDate"></div>
+            </div>
+            <label>DESCRIPTION</label>
+            <textarea id="invDesc" rows="3"></textarea>
+            <button class="btn-primary" style="width: 100%" onclick="createInvoice()">Finalize & Issue</button>
+            <button class="btn-primary" style="width:100%; background:none; color:white; margin-top:10px;" onclick="closeModals()">Discard</button>
         </div>
     </div>
 
     <aside class="sidebar">
-        <div class="brand">📊 LedgerFlow</div>
-        <div class="nav-label">Core</div>
-        <div class="nav-item active" onclick="navTo('dashboard', this)">🏠 Dashboard</div>
-        <div class="nav-item" onclick="navTo('invoices', this)">📄 Invoices</div>
-        <div class="nav-item" onclick="navTo('clients', this)">👥 Clients</div>
-        
-        <div class="nav-label">System</div>
-        <div class="nav-item" onclick="navTo('admin', this)">🛡️ Admin Panel</div>
-        <div class="nav-item" onclick="navTo('profile', this)">👤 User Profile</div>
-        <div class="nav-item" onclick="navTo('support', this)">🎧 Help Center</div>
-        
-        <div style="margin-top: auto;">
-            <div class="nav-item" onclick="logout()" style="color: #D14343;">🚪 Sign Out</div>
-        </div>
+        <div class="brand">L / FLOW</div>
+        <div class="nav-item active" onclick="nav('dashboard', this)">🏠 Dashboard</div>
+        <div class="nav-item" onclick="nav('invoices', this)">📄 Invoices</div>
+        <div class="nav-item" onclick="nav('admin', this)">🛡️ Admin</div>
+        <div class="nav-item" onclick="nav('profile', this)">👤 Profile</div>
+        <div class="nav-item" onclick="nav('support', this)">🎧 Support</div>
+        <div class="nav-item" onclick="logout()" style="margin-top: auto; color: var(--danger)">🚪 Logout</div>
     </aside>
 
     <main class="main-view">
-        <section id="view-dashboard" class="view-section active">
-            <h1>Dashboard</h1>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px;">
-                <div class="card-flat"><small>REVENUE</small><h2>$124,500.00</h2></div>
-                <div class="card-flat"><small>OUTSTANDING</small><h2 style="color: var(--accent-blue);">$12,400.00</h2></div>
-                <div class="card-flat"><small>ACTIVE PROJECTS</small><h2>18</h2></div>
+        <section id="v-dashboard" class="view-section active">
+            <h1>Analytics Overview</h1>
+            <div class="grid-stats">
+                <div class="card"><small>TOTAL REVENUE</small><h2>$482,190.00</h2></div>
+                <div class="card"><small>PENDING AR</small><h2 style="color:var(--accent-blue)">$24,000.00</h2></div>
+                <div class="card"><small>VENDORS</small><h2>142</h2></div>
             </div>
-            <button class="btn-primary" style="width:auto" onclick="navTo('invoices')">Manage Invoices</button>
+            <div class="card">
+                <h3>System Notice</h3>
+                <p style="color: var(--text-muted)">Welcome back. You have 3 invoices approaching late status.</p>
+            </div>
         </section>
 
-        <section id="view-invoices" class="view-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h1>Invoices</h1>
-                <button class="btn-primary" style="width:auto" onclick="toggleModal(true)">+ New Invoice</button>
+        <section id="v-invoices" class="view-section">
+            <div style="display:flex; justify-content: space-between; align-items: center">
+                <h1>Invoice Registry</h1>
+                <button class="btn-primary" onclick="showModal('invoiceModal')">+ Create Invoice</button>
             </div>
-            <div class="table-container">
-                <table class="spreadsheet-table">
-                    <thead>
-                        <tr><th>ID</th><th>Recipient</th><th>Date</th><th>Amount</th><th>Status</th><th style="text-align:right">Action</th></tr>
-                    </thead>
-                    <tbody id="invoiceList">
-                        <tr><td>#INV-001</td><td>Acme Corp</td><td>Mar 22, 2026</td><td>$2,500.00</td><td><span class="pill pill-pending">Pending</span></td><td style="text-align:right"><button class="btn-action">Edit</button></td></tr>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>ID</th><th>Entity</th><th>Due Date</th><th>Total</th><th>Status</th></tr></thead>
+                    <tbody id="invoiceTable">
+                        <tr><td>#8821</td><td>Global X</td><td>2026-05-12</td><td>$12,000.00</td><td><span class="pill pill-paid">PAID</span></td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <section id="view-clients" class="view-section"><h1>Clients</h1><div class="card-flat">Client directory loading...</div></section>
-        <section id="view-admin" class="view-section"><h1>Admin Panel</h1><div class="card-flat">System settings and user permissions.</div></section>
-        <section id="view-profile" class="view-section"><h1>Profile</h1><div class="card-flat">Email: <span id="userEmail"></span></div></section>
-        <section id="view-support" class="view-section"><h1>Help Center</h1><div class="card-flat">Documentation and Support tickets.</div></section>
+        <section id="v-admin" class="view-section">
+            <h1>Administrative Controls</h1>
+            <div class="card">
+                <h3>User Directory</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>User</th><th>Role</th><th>Access</th></tr></thead>
+                        <tbody>
+                            <tr><td>admin@ledgerflow.com</td><td>Superuser</td><td>Global</td></tr>
+                            <tr><td>billing@ledgerflow.com</td><td>Accounting</td><td>Invoices Only</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="v-profile" class="view-section">
+            <h1>Personal Settings</h1>
+            <div class="card" style="max-width: 500px;">
+                <label>DISPLAY NAME</label>
+                <input type="text" id="profName" value="Financial Officer 1">
+                <label>EMAIL</label>
+                <input type="email" id="profEmail" readonly>
+                <label>TIMEZONE</label>
+                <select><option>PST (UTC -8)</option><option>GMT (UTC +0)</option></select>
+                <button class="btn-primary" onclick="alert('Profile Updated')">Save Changes</button>
+            </div>
+        </section>
+
+        <section id="v-support" class="view-section">
+            <h1>Help & Documentation</h1>
+            <input type="text" placeholder="Search knowledge base..." onkeyup="searchHelp(this.value)">
+            <div id="helpContent">
+                <div class="card" style="margin-bottom: 10px;">
+                    <h4>How to issue a refund?</h4>
+                    <p class="text-muted">Navigate to the invoice registry, select the paid invoice, and click 'Credit Note'.</p>
+                </div>
+                <div class="card">
+                    <h4>Setting up Autopay</h4>
+                    <p class="text-muted">You can enable recurring billing under the Clients tab for individual entities.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
-        // NAVIGATION LOGIC
-        function navTo(viewId, el) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
-            else {
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => { if(item.innerText.toLowerCase().includes(viewId)) item.classList.add('active'); });
-            }
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(`view-${viewId}`).classList.add('active');
+        // NAVIGATION
+        function nav(id, el) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`v-${id}`).classList.add('active');
+            el.classList.add('active');
         }
 
-        // INVOICE FUNCTIONALITY
-        function toggleModal(show) {
-            document.getElementById('invoiceModal').style.display = show ? 'flex' : 'none';
-        }
+        // MODALS
+        function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModals() { document.querySelectorAll('.overlay').forEach(o => { if(o.id !== 'authOverlay') o.style.display = 'none'; }); }
 
-        let invCount = 2;
-        function addInvoice() {
+        // INVOICE LOGIC
+        function createInvoice() {
             const client = document.getElementById('invClient').value;
             const amount = document.getElementById('invAmount').value;
-            if(!client || !amount) return alert("Please fill in all fields");
+            const date = document.getElementById('invDate').value;
 
-            const date = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-            const table = document.getElementById('invoiceList');
-            const row = table.insertRow(0);
-            
+            if(!client || !amount) return alert("Required fields missing.");
+
+            const row = document.getElementById('invoiceTable').insertRow(0);
             row.innerHTML = `
-                <td>#INV-00${invCount++}</td>
+                <td>#${Math.floor(Math.random()*9000)}</td>
                 <td>${client}</td>
                 <td>${date}</td>
-                <td>$${parseFloat(amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-                <td><span class="pill pill-pending">Pending</span></td>
-                <td style="text-align:right"><button class="btn-action">Edit</button></td>
+                <td>$${parseFloat(amount).toLocaleString()}</td>
+                <td><span class="pill" style="background:rgba(255,255,255,0.1)">PENDING</span></td>
             `;
-
-            toggleModal(false);
-            document.getElementById('invClient').value = '';
-            document.getElementById('invAmount').value = '';
+            closeModals();
         }
 
-        // AUTH LOGIC
-        function finishLogin() {
-            const email = document.getElementById('emailInput').value;
-            if(!email.includes('@')) return alert("Enter valid email");
-            localStorage.setItem('ledger_auth', 'true');
-            localStorage.setItem('ledger_email', email);
-            location.reload();
+        // SEARCH SUPPORT
+        function searchHelp(query) {
+            const cards = document.querySelectorAll('#helpContent .card');
+            cards.forEach(c => {
+                const text = c.innerText.toLowerCase();
+                c.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
+            });
         }
 
-        function logout() {
-            localStorage.clear();
-            location.reload();
+        // AUTH
+        function handleAuth() {
+            const email = document.getElementById('loginEmail').value;
+            if(!email.includes('@')) return alert("Enter valid corporate ID");
+            localStorage.setItem('lf_user', email);
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('profEmail').value = email;
         }
 
-        if(localStorage.getItem('ledger_auth') === 'true') {
-            document.getElementById('authOverlay').classList.add('hidden');
-            document.getElementById('userEmail').textContent = localStorage.getItem('ledger_email');
+        function logout() { localStorage.clear(); location.reload(); }
+
+        // Persistence
+        window.onload = () => {
+            const user = localStorage.getItem('lf_user');
+            if(user) {
+                document.getElementById('authOverlay').style.display = 'none';
+                document.getElementById('profEmail').value = user;
+            }
         }
     </script>
 </body>
