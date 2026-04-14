@@ -22,7 +22,6 @@
             scroll-behavior: smooth;
         }
 
-        /* NAVIGATION */
         nav {
             display: flex;
             justify-content: space-between;
@@ -50,30 +49,35 @@
 
         .nav-links button:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--ink-black); }
 
-        /* HEADER WITH IMAGE BEHIND TEXT */
+        /* UPDATED: HEADER WITH BACKGROUND IMAGE BEHIND EXISTING TEXT */
         .poster-header {
             position: relative;
-            padding: 100px 40px;
+            padding: 120px 40px; /* Adjusted padding for better visibility of BG */
             text-align: left;
             border-bottom: 6px solid var(--ink-black);
-            background: var(--neon-pink);
+            background: var(--neon-pink); /* Fallback color */
+            min-height: 400px; /* Ensure enough height to show image */
+            display: flex;
+            align-items: center;
             overflow: hidden;
         }
 
+        /* The pseudo-element places the image behind the text */
         .poster-header::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('Nexus_Img1.jpg');
+            /* Kept image name: Nexus_Img1.jpg */
+            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('Nexus_Img1.jpg');
             background-size: cover;
             background-position: center;
-            opacity: 0.5;
-            z-index: 1;
+            z-index: 1; /* Puts image at bottom layer of header */
         }
 
+        /* Kept text style 'as is' */
         .poster-header h1 {
             position: relative;
-            z-index: 2;
+            z-index: 2; /* Forces text in front of image */
             font-size: clamp(60px, 12vw, 150px);
             margin: 0;
             line-height: 0.85;
@@ -81,6 +85,7 @@
             letter-spacing: -5px;
             color: var(--white);
             -webkit-text-stroke: 3px var(--ink-black);
+            paint-order: stroke fill;
         }
 
         .buy-now-sticky {
@@ -99,7 +104,6 @@
             z-index: 10;
         }
 
-        /* AUTH OVERLAY */
         .auth-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -128,7 +132,6 @@
             font-family: inherit;
         }
 
-        /* EVENTS GRID */
         .event-container {
             padding: 80px 40px;
             display: grid;
@@ -145,15 +148,14 @@
             overflow: hidden;
         }
 
-        .event-card:hover { transform: translate(-5px, -5px); box-shadow: 15px 15px 0px var(--ink-black); }
         .event-card img { width: 100%; height: 350px; object-fit: cover; border-bottom: 6px solid var(--ink-black); }
         .event-card-body { padding: 25px; }
 
         /* TICKET WALLET */
         .ticket-wallet {
-            background: var(--ink-black);
-            color: var(--white);
             padding: 60px 40px;
+            background: var(--ink-black);
+            color: white;
             border-top: 6px solid var(--lemon-yellow);
         }
 
@@ -168,41 +170,10 @@
             background: var(--white);
             color: black;
             padding: 20px;
-            border: 4px solid var(--neon-pink);
-            position: relative;
-        }
-
-        /* MODALS */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border: 8px solid var(--ink-black);
-            padding: 40px;
-            width: 450px;
-            box-shadow: 25px 25px 0px var(--ink-black);
-            position: relative;
-        }
-
-        .btn-xl {
-            width: 100%;
-            padding: 20px;
-            background: var(--electric-blue);
-            border: 5px solid var(--ink-black);
-            font-size: 22px;
-            font-weight: 900;
-            margin-top: 20px;
-            cursor: pointer;
-            box-shadow: 6px 6px 0px var(--ink-black);
-            transition: 0.1s;
+            border-left: 10px dashed var(--neon-pink);
+            border-right: 4px solid black;
+            border-top: 4px solid black;
+            border-bottom: 4px solid black;
         }
 
         .guestlist-btn {
@@ -220,23 +191,41 @@
             color: white;
         }
 
-        .qr-placeholder {
-            width: 100px;
-            height: 100px;
-            background: black;
-            margin: 10px auto;
-            color: white;
-            font-size: 8px;
-            display: flex;
-            align-items: center;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 3000;
             justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border: 8px solid var(--ink-black);
+            padding: 40px;
+            width: 450px;
+            box-shadow: 25px 25px 0px var(--ink-black);
+        }
+
+        .btn-xl {
+            width: 100%;
+            padding: 20px;
+            background: var(--electric-blue);
+            border: 5px solid var(--ink-black);
+            font-size: 22px;
+            font-weight: 900;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px var(--ink-black);
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo" onclick="location.reload()">NEXUS</div>
+        <div class="logo" onclick="window.scrollTo(0,0)">NEXUS</div>
         <div class="nav-links">
             <button onclick="document.querySelector('.event-container').scrollIntoView()">EVENTS</button>
             <button onclick="document.querySelector('.ticket-wallet').scrollIntoView()">TICKETS</button>
@@ -247,9 +236,9 @@
     <div class="auth-overlay" id="authOverlay">
         <div class="pop-card">
             <h1>NEXUS ID</h1>
-            <input type="text" id="loginName" placeholder="GUEST NAME">
+            <input type="text" id="loginUser" placeholder="GUEST NAME">
             <input type="password" placeholder="PASSWORD">
-            <button class="btn-xl" style="background: var(--lemon-yellow);" onclick="handleLogin()">GET ACCESS</button>
+            <button class="btn-xl" style="background: var(--lemon-yellow);" onclick="login()">GET ACCESS</button>
         </div>
     </div>
 
@@ -278,102 +267,99 @@
     </main>
 
     <section class="ticket-wallet">
-        <h2 style="font-size: 40px; margin: 0; color: var(--electric-blue);">DIGITAL WALLET</h2>
-        <div class="wallet-grid" id="walletGrid">
-            <p id="emptyMsg">Wallet is empty. Book an event above.</p>
+        <h2 style="font-size: 40px; margin: 0; color: var(--electric-blue);">TICKET VAULT</h2>
+        <div class="wallet-grid" id="wallet">
+            <p id="emptyMsg">Your vault is empty. Secure a pass above.</p>
         </div>
     </section>
 
     <button class="guestlist-btn" onclick="showGuestlist()">CHECK GUESTLIST</button>
 
-    <div class="modal" id="orderModal">
+    <div class="modal" id="masterModal">
         <div class="modal-content" id="modalTarget"></div>
     </div>
 
     <script>
-        let state = { event: "", tier: "", user: "GUEST", tickets: [], guestlist: ["Viper_X", "Neon_Glitch", "BassHunter"] };
+        let session = { user: "ANONYMOUS", tickets: [], guestlist: ["Ghost_Link", "Data_Stream", "Void_Walker"] };
 
-        function handleLogin() {
-            const nameInput = document.getElementById('loginName').value;
-            if(nameInput) state.user = nameInput;
+        function login() {
+            const name = document.getElementById('loginUser').value;
+            if(name) session.user = name;
             document.getElementById('authOverlay').style.display='none';
         }
 
+        // functional booking logic
         function openOrder(name, img) {
-            state.event = name;
-            const modal = document.getElementById('orderModal');
+            const modal = document.getElementById('masterModal');
             const target = document.getElementById('modalTarget');
             modal.style.display = 'flex';
             target.innerHTML = `
                 <img src="${img}" style="width:100%; height:150px; object-fit:cover; border:4px solid #000;">
                 <h2>${name}</h2>
-                <button class="btn-xl" style="background:var(--lemon-yellow)" onclick="selectTier('VIP PASS')">VIP PASS - $200</button>
-                <button class="btn-xl" style="background:var(--white)" onclick="selectTier('GEN ADMISSION')">GEN AD - $80</button>
+                <button class="btn-xl" style="background:var(--lemon-yellow)" onclick="book('${name}', 'VIP PASS')">VIP PASS - $200</button>
+                <button class="btn-xl" style="background:var(--white)" onclick="book('${name}', 'GEN ADMISSION')">GEN AD - $80</button>
                 <p onclick="closeModal()" style="cursor:pointer; text-decoration:underline; margin-top:15px; text-align:center;">CANCEL</p>
             `;
         }
 
-        function selectTier(tier) {
-            state.tier = tier;
-            const ticketId = "NX-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-            state.tickets.push({ event: state.event, tier: state.tier, id: ticketId });
-            state.guestlist.unshift(state.user); // Add user to guestlist
-
+        function book(event, tier) {
+            const id = "NX-" + Math.floor(Math.random()*8999 + 1000);
+            session.tickets.push({ event, tier, id });
+            session.guestlist.unshift(session.user);
+            
             const target = document.getElementById('modalTarget');
             target.innerHTML = `
-                <h1 style="color:var(--neon-pink)">BOOKED!</h1>
-                <p>NAME: ${state.user}</p>
-                <p>EVENT: ${state.event}</p>
-                <div class="qr-placeholder">AUTH-${ticketId}</div>
-                <button class="btn-xl" onclick="updateWallet(); closeModal()">VIEW IN WALLET</button>
+                <h1 style="color:var(--neon-pink)">ACCESS GRANTED</h1>
+                <p><b>GUEST:</b> ${session.user}</p>
+                <p><b>EVENT:</b> ${event}</p>
+                <div style="background:black; color:white; padding:20px; text-align:center; font-family:monospace;">${id}</div>
+                <button class="btn-xl" onclick="refreshWallet(); closeModal();">ADD TO VAULT</button>
             `;
         }
 
-        function updateWallet() {
-            const grid = document.getElementById('walletGrid');
-            const emptyMsg = document.getElementById('emptyMsg');
-            if(emptyMsg) emptyMsg.remove();
-
-            grid.innerHTML = state.tickets.map(t => `
+        function refreshWallet() {
+            const wallet = document.getElementById('wallet');
+            document.getElementById('emptyMsg').style.display = 'none';
+            wallet.innerHTML = session.tickets.map(t => `
                 <div class="ticket-stub">
                     <small>${t.id}</small>
                     <h3 style="margin:5px 0">${t.event}</h3>
-                    <p style="margin:0; font-size:14px;">ACCESS: ${t.tier}</p>
+                    <p style="margin:0">${t.tier}</p>
                 </div>
             `).join('');
         }
 
+        // Functional navigation & buttons
         function showVenue() {
-            const modal = document.getElementById('orderModal');
+            const modal = document.getElementById('masterModal');
             const target = document.getElementById('modalTarget');
             modal.style.display = 'flex';
             target.innerHTML = `
                 <h2>VENUE MAP</h2>
-                <div style="border:4px solid black; padding:20px; text-align:center; background:#eee">
-                    <div style="padding:10px; border:2px solid black; margin-bottom:5px; background:var(--electric-blue)">MAIN STAGE</div>
-                    <div style="display:flex; gap:5px;">
-                        <div style="flex:1; border:2px solid black; padding:10px;">VIP LOUNGE</div>
-                        <div style="flex:1; border:2px solid black; padding:10px;">THE VAULT</div>
+                <div style="border:5px solid black; padding:20px; background:#ddd;">
+                    <div style="background:var(--electric-blue); border:2px solid black; padding:10px; margin-bottom:10px;">MAIN STAGE</div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div style="border:2px solid black; padding:10px;">VIP LOUNGE</div>
+                        <div style="border:2px solid black; padding:10px;">THE VAULT</div>
                     </div>
                 </div>
-                <button class="btn-xl" onclick="closeModal()">CLOSE MAP</button>
+                <button class="btn-xl" onclick="closeModal()">EXIT MAP</button>
             `;
         }
 
         function showGuestlist() {
-            const modal = document.getElementById('orderModal');
+            const modal = document.getElementById('masterModal');
             const target = document.getElementById('modalTarget');
             modal.style.display = 'flex';
-            const listItems = state.guestlist.slice(0, 5).map(g => `<div style="border-bottom:2px solid black; padding:10px;">• ${g.toUpperCase()}</div>`).join('');
+            const names = session.guestlist.slice(0, 5).map(g => `<div style="padding:10px; border-bottom:3px solid black;">• ${g.toUpperCase()}</div>`).join('');
             target.innerHTML = `
-                <h2>LIVE GUESTLIST</h2>
-                <div style="text-align:left; margin-bottom:20px;">${listItems}</div>
-                <small>+ 2,490 Verified Members</small>
+                <h2>GUESTLIST</h2>
+                <div style="text-align:left; margin:20px 0;">${names}</div>
                 <button class="btn-xl" onclick="closeModal()">CLOSE</button>
             `;
         }
 
-        function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+        function closeModal() { document.getElementById('masterModal').style.display = 'none'; }
     </script>
 </body>
 </html>
